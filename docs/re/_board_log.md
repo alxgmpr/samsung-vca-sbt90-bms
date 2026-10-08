@@ -17,3 +17,6 @@ Append-only. One line per board action: time | slug | exact command | result sum
 - 2026-10-08T05:31:18Z | unlock-exec | `uv run bms.py backup backups/df_post_unlock_20261007_233118.bin` | diff vs pre = 6 bytes only: F1E28 `17 E8 00 00 00 00` (new P17=0 record)
 - 2026-10-08T05:31:28Z | unlock-exec | SBS `rw(0x7A)`, `rw(0x16)` after the bootloader-session reset | 0x7A=0 (locked after reset), status 0x00C0
 - 2026-10-08T05:54:40Z | lead | `uv run bms.py set-param 0x10 0x00004C50 -y` (user-approved fuse disarm) | 1st write try not accepted, retry OK; slot F1E2E, PFDL 0, diff = new record only; P10 0x52394C50 -> 0x00004C50; status 0x00C0, mfg reads 1980-00-00, PF clear; pre-image backups/df_pre_P10_20261007_235458.bin
+- 2026-10-08 | lead | `bms.py status`, `log`, `backup` (tmp, not kept) read-only | status 0x00C0, PF clear, mfg 1980-00-00, cells 3677-3699 mV (spread 22), charge req 150 mA @ 25.6 V; data flash = df_pre_P10 + P10 record (F1E2E `10 EF 50 4C 00 00`) + 3 firmware P39 records, append-only
+- 2026-10-08 | lead | status polled after a bootloader session | charge request reads 0 for ~3 s after the reset back into firmware, then 150 mA
+- 2026-10-08 | lead | `BMS_BOARD=1 pytest tests/test_board.py` (read-only HIL suite) | 6/6 pass
