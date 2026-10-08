@@ -9,6 +9,10 @@ the BMS over SMBus, dump its flash, and clear the PF so the board can be reused 
 
 *Board: SEC VS9000N 6S1P, Rev R1.1, P01P-00200A (2018-07-25). U1 = Renesas RAJ240080 (RL78 MCU + analog front end).*
 
+![Bench wiring: 6 × 100 Ω ladder, supply, TOOL0 1 kΩ pull-up](images/bench-wiring.jpg)
+
+*Bench wiring: six 100 Ω resistors between B−…B+ stand in for the cells (22.2 V, 100 mA limit). TOOL0 (TP32) has an on-board 1 kΩ pull-up to TP31 (3.3 V). Q10 is the F1 fuse-blow trigger FET.*
+
 ## Status
 
 - PF cleared (2026-10-07). BatteryStatus `0x48C0` → `0x00C0` (TERMINATE CHARGE/DISCHARGE gone),
