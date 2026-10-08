@@ -5,5 +5,4 @@ ghidra.gpr
 ghidra.rep/
 # AI process artifacts (plans/todos) stay local
 CLAUDE.md
-WRITE_PLAN.md
 BINARY_NINJA_TODO.md
