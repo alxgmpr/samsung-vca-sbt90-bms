@@ -231,3 +231,21 @@ count 0xFF4EB, exec length 0xFF4EC, PEC 0xFF514). Corrections to earlier notes:
   ChargingCurrent 0 -> 150 mA, ChargingVoltage 0 -> 25600 mV. FCC 2390, cyc 387, cells, model intact.
 - Undo (if ever needed): append `17 E8 04 00 00 00` the same way.
 - Q10 gate = 0 V with firmware running (user metered, 2026-10-07). C+ wake clip removed. F1 bridge still on until new fuse.
+
+---
+## What tripped the PF (event log decode, 2026-10-07)
+- Fault log = vendor block 0xF3 (params P91..P99, ring index 0xFF70D, writer 0x7B6F via 0x760F).
+  Entry = [ts u16 = P5B low word][state byte = P73 low byte][code]. Second log 0xF5 (P9A-P9D, 0x7C85).
+  Snapshots 0xF0-0xF2 (24 B each, last 3 distinct codes): words 6..11 = the six cell voltages.
+- Code <-> fault-mask bit table @0x2422; per-code saturating lifetime counters at P40-P45.
+  Lifetime counts: 0x5C x122, 0x3C x58, 0x14 x38, 0x46 x4, 0x16 x1.
+- **PF code 0xCA = bit 50 = dead-cell check (0x6890):** min cell (0xFFA34) < 1000 mV (const @0xD5C6)
+  for 5*4 checks (const @0xD5C8) before any reading >= 1000 mV since wake; a good reading disarms it
+  until the next reset. Same timestamp: 0x14 (bit 2) and 0x16 (bit 4, min cell < 2500 mV @0xD562).
+- Snapshot at the trip: cells 3566, 1173, 0, 1178, 3562, 2682 mV — cell 3 at 0 V, two more collapsed.
+- Timestamp P5B counts ~1 per powered-on hour; trip at 0x8F54 vs 0x910A at the first bench reading
+  => ~440 powered hours before the bench work. Not caused by bench supply cycling.
+- **Rebuild risk:** this check fires if the BMS wakes while any tap reads < 1 V (e.g. taps connected
+  one at a time). Connect all cells/taps before the board can wake, and confirm `bms.py status`
+  shows PF clear BEFORE fitting the new F1 (re-clear with `bms.py set-param 0x17 0` if it re-trips).
+- Tool: `uv run bms.py log`.

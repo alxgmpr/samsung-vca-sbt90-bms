@@ -6,6 +6,7 @@ decoding happens here.
   uv run bms.py params [--json]        all data-flash params, newest record per index (bootloader)
   uv run bms.py backup [FILE]          save 4 KB data-flash image (default backups/df_<time>.bin)
   uv run bms.py set-param IDX VALUE    append one EEL record (asks first), verify, show status
+  uv run bms.py log                    decoded fault/event log + snapshots (firmware mode)
 """
 import argparse, datetime, json, os, struct, subprocess, sys
 
@@ -113,6 +114,47 @@ def cmd_status(a):
 def read_image():
     return bytes.fromhex(pico(SNIP_SNAP))
 
+# fault-mask bit -> logged code (table @0x2422); bits 48-62 are permanent faults (PF)
+CODE_BIT = {0x0A: 0, 0x14: 2, 0x16: 4, 0x28: 6, 0x29: 7, 0x32: 8, 0x33: 9, 0x34: 10, 0x3C: 11, 0x3D: 12,
+            0x46: 15, 0x47: 16, 0x50: 17, 0x51: 18, 0x5B: 20, 0x5C: 21, 0xA3: 35, 0xA4: 36, 0xA5: 37,
+            0xA6: 38, 0xA7: 39, 0xB4: 40, 0xB5: 41, 0xB6: 42, 0xB7: 43, 0xB9: 46, 0xBA: 47, 0xC8: 48,
+            0xC9: 49, 0xCA: 50, 0xCC: 52, 0xDC: 55}
+CODE_NOTE = {0xCA: "PF: dead cell, min cell < 1000 mV for ~20 checks after wake (0x6890)",
+             0x16: "min cell below 2500 mV (0x60CA)", 0xA3: "boot: config checksum mismatch",
+             0xA5: "boot: config signature 'SV' missing"}
+
+def snip_log():
+    return f"""
+import smb
+smb.i2c = SoftI2C(sda=Pin(4), scl=Pin(5), freq=40_000)
+r = {{}}
+for c in (0xF0, 0xF1, 0xF2, 0xF3, 0xF5, 0xE7):
+    try: r[c] = smb.rb(c).hex()
+    except Exception: r[c] = ""
+print("{TAG}" + json.dumps(r))
+"""
+
+def cmd_log(a):
+    r = {int(k): bytes.fromhex(v) for k, v in pico(snip_log()).items()}
+    if not r[0xE7]:
+        sys.exit("no SBS answer: pack asleep? touch bench supply+ to C+ for ~1 s and retry")
+    now = int.from_bytes(r[0xE7][:2], "little")
+    def code(c):
+        b = CODE_BIT.get(c)
+        kind = "" if b is None else (f"bit {b}" + (" PERMANENT" if 48 <= b <= 62 else ""))
+        return f"0x{c:02X} {kind:<14} {CODE_NOTE.get(c, '')}"
+    print(f"timestamp now 0x{now:04X} (P5B, ~1 per powered-on hour)")
+    for blk, name in ((0xF3, "fault log"), (0xF5, "event log")):
+        print(f"{name} (block 0x{blk:02X}, ring order):")
+        for k in range(0, len(r[blk]), 4):
+            ts, st, c = int.from_bytes(r[blk][k:k + 2], "little"), r[blk][k + 2], r[blk][k + 3]
+            print(f"  ts 0x{ts:04X} ({now - ts:>5} ago)  state 0x{st:02X}  {code(c)}")
+    print("snapshots (last 3 distinct codes):")
+    for blk in (0xF0, 0xF1, 0xF2):
+        w = [int.from_bytes(r[blk][k:k + 2], "little") for k in range(0, len(r[blk]), 2)]
+        if len(w) < 12: continue
+        print(f"  ts 0x{w[3]:04X} code 0x{w[4] >> 8:02X}  cells {w[6:12]} mV  raw {w[0]} {w[1]} {w[5]}")
+
 def cmd_params(a):
     img = read_image()
     recs = records(img)
@@ -155,6 +197,7 @@ def main():
     sp.add_parser("status").set_defaults(fn=cmd_status)
     q = sp.add_parser("params"); q.add_argument("--json", action="store_true"); q.set_defaults(fn=cmd_params)
     q = sp.add_parser("backup"); q.add_argument("file", nargs="?"); q.set_defaults(fn=cmd_backup)
+    sp.add_parser("log").set_defaults(fn=cmd_log)
     q = sp.add_parser("set-param"); q.add_argument("idx"); q.add_argument("value")
     q.add_argument("-y", "--yes", action="store_true"); q.set_defaults(fn=cmd_set_param)
     a = p.parse_args(); a.fn(a)

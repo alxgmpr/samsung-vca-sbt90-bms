@@ -27,7 +27,9 @@ the BMS over SMBus, dump its flash, and clear the PF so the board can be reused 
 4. **Data flash** is an append-only EEPROM emulation: two rotating 2 KB blocks of 6-byte records
    `[idx][~idx][u32 LE]`, newest record per index wins, 158 params (0x00–0x9D).
 5. **The PF:** the firmware keeps a 64-bit fault mask in RAM; bits 48–62 are permanent faults and are
-   persisted in **param 0x17**. This unit had `P0x17 = 4` (fault bit 50). Appending the record
+   persisted in **param 0x17**. This unit had `P0x17 = 4`: fault bit 50 = code 0xCA, the dead-cell check
+   (a cell under 1000 mV after wake). The fault log snapshot shows cell 3 at 0 V when it tripped, ~440
+   powered hours before the bench work. Appending the record
    `17 E8 00 00 00 00` to the active block cleared it (`pico/pf_append.py`). Undo = append `17 E8 04 00 00 00`.
 
 Full details: [docs/SESSION_NOTES.md](docs/SESSION_NOTES.md) (hardware map, wiring, dead ends) and
@@ -56,6 +58,7 @@ uv run bms.py status                 # decoded SBS: pack/cell volts, capacity, s
 uv run bms.py params [--json]        # every data-flash param (newest record per index), via the bootloader
 uv run bms.py backup [FILE]          # save the 4 KB data-flash image (default backups/df_<time>.bin)
 uv run bms.py set-param IDX VALUE    # append one record (asks first, saves a pre-write image, verifies the diff)
+uv run bms.py log                    # decoded fault/event log with cell snapshots
 ```
 
 Lower-level scripts run directly: `mpremote connect /dev/cu.usbmodem1101 cp pico/dfw.py pico/smb.py : + run pico/pf_verify.py`.
@@ -64,7 +67,8 @@ Lower-level scripts run directly: `mpremote connect /dev/cu.usbmodem1101 cp pico
 
 Work on a bench supply through a resistor ladder (6 × 100 Ω, 22.2 V, 100 mA limit) with no real cells
 fitted, and keep a backup of the data flash before any write. This is a 6S lithium pack; the PF exists
-for a reason. The failure field read "over voltage" here; the old cells are being replaced, but check
-cell voltages and balance on the first charges before trusting the pack.
+for a reason. Here it was a dead original cell. **When fitting cells:** the dead-cell check re-arms on
+every wake, so connect all cells/taps before the board can power up, and confirm `bms.py status` shows
+PF clear before fitting the new F1 (a re-trip would blow it). Check balance on the first charges.
 
 Firmware images are Samsung SDI's; keep this repo private.
