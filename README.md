@@ -11,7 +11,7 @@ the BMS over SMBus, dump its flash, and clear the PF so the board can be reused 
 
 ![Bench wiring: 6 × 100 Ω ladder, supply, TOOL0 1 kΩ pull-up](images/bench-wiring.jpg)
 
-*Bench wiring: six 100 Ω resistors between B−…B+ stand in for the cells (22.2 V, 100 mA limit). TOOL0 (TP32) has an on-board 1 kΩ pull-up to TP31 (3.3 V). Q10 is the F1 fuse-blow trigger FET.*
+*Bench wiring: six 100 Ω resistors between B−…B+ stand in for the cells (22.2 V, 100 mA limit). Pico GP4/GP5/GP2/GP1/GND go to TP39/TP40/TP33/TP32/TP14; TX (GP0) reaches TOOL0 through a 1 kΩ resistor. Q10 is the low-side switch that fires F1 (SFK-3045x); C+ is jumpered to B+ to unlatch after a PF.*
 
 ## Status
 
