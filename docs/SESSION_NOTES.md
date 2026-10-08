@@ -83,38 +83,38 @@ Reliable at **20 kHz** I2C. Answers only these commands: 0x26, 0x55, 0x59, 0x70,
 
 ## Firmware dump (DONE, verified)
 
-- `codeflash.bin`  — 64 KB code flash. SHA256 matches across 2 independent dumps.
-- `dataflash.bin`  — 4 KB data flash (0xF1000-0xF1FFF).
-- `code.dis`       — full RL78 disassembly.
+- `firmware/codeflash.bin`  — 64 KB code flash. SHA256 matches across 2 independent dumps.
+- `firmware/dataflash.bin`  — 4 KB data flash (0xF1000-0xF1FFF).
+- `firmware/code.dis`       — full RL78 disassembly.
 - Data flash = 157 Renesas R-BMS parameter records, format
   [idx][~idx][u32 LE], 6 bytes each, at 0x808-0xEC8; EEL fill (17 e8 04 00 00 00)
   after; block footer 5A A5 5A at 0xFFA. Floats visible (P19 = 2390.7 = FCC).
 - Across dumps, ONLY the EEL free-space + two counters + one footer byte change
   (normal wear-leveling). All 157 parameter records are byte-stable = full config
-  and calibration captured. Backups archived in backups_verified_20261007/.
+  and calibration captured. Backups archived in backups/verified_20261007/.
 
 ## Disassembler
 
 Built GNU objdump with RL78 support (binutils 2.42) in a scratchpad; a copy of the
-output is code.dis. To rebuild:
+output is firmware/code.dis. To rebuild:
   configure --target=rl78-elf --disable-gdb --disable-ld --disable-gas \
             --with-system-zlib --without-zstd ; make MAKEINFO=true all-binutils
-  objdump -b binary -m rl78 -D --start-address=0xADDR --stop-address=0xADDR codeflash.bin
+  objdump -b binary -m rl78 -D --start-address=0xADDR --stop-address=0xADDR firmware/codeflash.bin
 
 ## Scripts (pico/)
 
 - smb.py       — SMBus helpers (rw/rb/ww/wb, PEC/CRC-8, reset). Self-checks CRC.
 - bl.py        — bootloader entry (TOOL0 low across reset) + block helpers.
 - bl_dump.py   — memory dumper via 0xFC (edit REGIONS). Double-read verified.
-- pfclear.py   — SBS-side PF-clear / unseal attempts (all negative so far).
-- fuzz_ma.py   — ManufacturerAccess fuzzer (negative).
+- pico/experiments/pfclear.py   — SBS-side PF-clear / unseal attempts (all negative so far).
+- pico/experiments/fuzz_ma.py   — ManufacturerAccess fuzzer (negative).
 
 ## STATUS / NEXT
 
-Investigation complete and read-only. Flash WRITE not yet attempted (irreversible,
-safety-relevant 6S pack). Next: finish tracing the boot fault-check to the exact
-data-flash parameter that latches the fuse/TCA/TDA, then do ONE minimal write.
-See WRITE_PLAN.md once the PF record is pinpointed.
+PF CLEARED (2026-10-07). Data-flash write decoded (bootloader cmd 0xFB) and the latched
+fault (param P0x17 = 4, fault bit 50) cleared by appending an EEL record P0x17 = 0.
+BatteryStatus 0x48C0 -> 0x00C0, Q10 gate 0 V. Full detail at the end of WRITE_PLAN.md.
+Next: hardware rebuild (new F1, 6 cells).
 
 ## Rebuild reminder
 

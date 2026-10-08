@@ -24,7 +24,7 @@ map is NDA, and the EEL far-pointer indexing isn't fully reversed. So we can't
 name "record P## = PF flag" purely from static analysis with confidence.
 
 Because data-flash writes are **reversible** (full verified backup in
-`backups_verified_20261007/`, and we can rewrite any record), the safe way to
+`backups/verified_20261007/`, and we can rewrite any record), the safe way to
 both *identify* and *clear* the PF is a controlled, reversible experiment.
 
 ## Safety preconditions (every step)
@@ -34,7 +34,7 @@ both *identify* and *clear* the PF is a controlled, reversible experiment.
 - Full backup verified (done: code SHA stable across 2 dumps; all 157 params
   stable across 3 dumps).
 - A bad write is recoverable: re-dump, compare to backup, rewrite the affected
-  1 KB data-flash block from `dataflash.bin`.
+  1 KB data-flash block from `firmware/dataflash.bin`.
 
 ## Step 0 — prove the write path harmlessly (no real data touched)
 
@@ -187,7 +187,7 @@ Root cause found (disasm of 0xE750 handler):
 
 ### Status: 0x24 write NOT yet proven. Mechanism identified, data-load step TODO.
 ### Also: EEL rotates the active block on ~every bl session (resets trigger GC) -
-### must detect active/spare each session (proof24.py does this).
+### must detect active/spare each session (pico/experiments/proof24.py does this).
 
 ---
 ## DATA-FLASH WRITE SOLVED + PROVEN (2026-10-07, session 3)
@@ -209,7 +209,7 @@ count 0xFF4EB, exec length 0xFF4EC, PEC 0xFF514). Corrections to earlier notes:
   0x00 [0xD0] = leave bootloader / run app; 0xFA = flash->buffer read; 0xFD = code write
   (no count byte: [0xFD][addr3][len2][data...]); 0x55/0x59/0x7C/0x26/0x70 are plain reads,
   0x55 is NOT a mode switch (no mode needed for writes).
-- **Proof:** pico/proofFB.py wrote 0xA5 to 0xF1C00 (middle of spare block; active was 0xF1000).
+- **Proof:** pico/experiments/proofFB.py wrote 0xA5 to 0xF1C00 (middle of spare block; active was 0xF1000).
   PFDL status 0, blank-check flipped 0xFF->0x00, full 4 KB DF diff = ONLY F1C00:FF>A5.
   Firmware intact after (FCC 2390, cyc 387, cells, model, status 0x48C0).
   Leftover: that 0xA5 byte sits in the spare block until the next EEL rotation erases it.
@@ -226,7 +226,7 @@ count 0xFF4EB, exec length 0xFF4EC, PEC 0xFF514). Corrections to earlier notes:
   mode 3 = gauge-learning reset P17-P3E from defaults @0xDA5C (not used).
 - AFE reg 0x58 written 0x40/0xC0 at 0x51E3 (also on every boot) — likely FET enable, not the fuse.
 - **Fix applied:** appended `17 E8 00 00 00 00` at 0xF1DE6 (active block 0xF1800, first free slot) via
-  pico/pf_append.py. Diff = only those 6 bytes. Pre-write image: df_pre_pfclear.hex.
+  pico/pf_append.py. Diff = only those 6 bytes. Pre-write image: firmware/df_pre_pfclear.hex.
 - Result after reset (x3, + 60 s): BatteryStatus 0x48C0 -> 0x00C0, MA 0xA000 -> 0x2080,
   ChargingCurrent 0 -> 150 mA, ChargingVoltage 0 -> 25600 mV. FCC 2390, cyc 387, cells, model intact.
 - Undo (if ever needed): append `17 E8 04 00 00 00` the same way.
