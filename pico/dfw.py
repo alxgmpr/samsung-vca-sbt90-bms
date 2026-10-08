@@ -67,10 +67,17 @@ def blank(a, n):  # 0x24 -> PFDL blank check; returns (ff4e6, ff4e7)
     cmd(0x24, bytes([a & 0xFF, a >> 8 & 0xFF, a >> 16 & 0xFF, n & 0xFF, n >> 8]))
     return rbyte(0x26), status()
 
-def wr(a, data):
+def wr(a, data):  # SoftI2C writeto doesn't raise on data NAK: verify by read-back, retry only while still blank
     body = bytes([0xFB, 3 + len(data), a & 0xFF, a >> 8 & 0xFF, a >> 16 & 0xFF]) + data
-    I.writeto(A, body + bytes([crc8(bytes([A << 1]) + body)]))
-    time.sleep_ms(60)
+    frame = body + bytes([crc8(bytes([A << 1]) + body)])
+    for n in range(4):
+        acks = I.writeto(A, frame)
+        time.sleep_ms(60)
+        got = rd_ok(a, len(data))
+        if got == data: return n
+        if got != b"\xff" * len(data): raise OSError("partial program at %05X: %s (acks %d)" % (a, got, acks))
+        print("write try %d not accepted (acks %d/%d), retrying" % (n, acks, len(frame)))
+    raise OSError("write not accepted at %05X" % a)
 
 def active(img):  # img = snap() of 0xF1000-0xF1FFF; active EEL block = the non-FF half
     return 0xF1000 if img[:16] != b"\xff" * 16 else 0xF1800

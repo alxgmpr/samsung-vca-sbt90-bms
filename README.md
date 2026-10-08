@@ -37,6 +37,7 @@ Full details: [docs/SESSION_NOTES.md](docs/SESSION_NOTES.md) (hardware map, wiri
 
 | Path | Contents |
 |---|---|
+| `bms.py` | Host CLI wrapping the Pico tools (status / params / backup / set-param) |
 | `pico/` | MicroPython tools: `smb.py` (SMBus/PEC), `bl.py` + `dfw.py` (bootloader read/write, verified snapshots, intact check), `sbs_probe.py`, `bl_dump.py`/`run_dump.py`, `pf_append.py`, `pf_verify.py` |
 | `pico/experiments/` | Probes and one-off experiments from the investigation (boot-ROM, fuzzing, write framing tests) |
 | `firmware/` | `codeflash.bin` (64 KB), `dataflash.bin` (4 KB), `code.dis` (RL78 disassembly), `df_pre_pfclear.hex` (data flash right before the fix) |
@@ -46,7 +47,18 @@ Full details: [docs/SESSION_NOTES.md](docs/SESSION_NOTES.md) (hardware map, wiri
 | `docs/` | Notes and the write/PF write-up |
 | `images/` | Photos |
 
-Run a tool with `mpremote connect /dev/cu.usbmodem1101 cp pico/dfw.py pico/smb.py : + run pico/pf_verify.py`.
+## Usage
+
+Host CLI (needs `mpremote`; the Pico on `/dev/cu.usbmodem1101`, override with `BMS_PORT`; pack awake with supply on C+):
+
+```
+uv run bms.py status                 # decoded SBS: pack/cell volts, capacity, status flags, PF verdict
+uv run bms.py params [--json]        # every data-flash param (newest record per index), via the bootloader
+uv run bms.py backup [FILE]          # save the 4 KB data-flash image (default backups/df_<time>.bin)
+uv run bms.py set-param IDX VALUE    # append one record (asks first, saves a pre-write image, verifies the diff)
+```
+
+Lower-level scripts run directly: `mpremote connect /dev/cu.usbmodem1101 cp pico/dfw.py pico/smb.py : + run pico/pf_verify.py`.
 
 ## Safety
 
