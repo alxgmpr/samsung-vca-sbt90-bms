@@ -16,3 +16,4 @@ Append-only. One line per board action: time | slug | exact command | result sum
 - 2026-10-08T05:31:13Z | unlock-exec | step 2 (approved): unlock, `wb(0x84,[5C 00])`, `wb(0x8A,00 00 00 00,pec)`, 2 s, `ww(0x7A,0)` | 0x8A before/after identical, 0x88 (EEL state)=0, relock 0
 - 2026-10-08T05:31:18Z | unlock-exec | `uv run bms.py backup backups/df_post_unlock_20261007_233118.bin` | diff vs pre = 6 bytes only: F1E28 `17 E8 00 00 00 00` (new P17=0 record)
 - 2026-10-08T05:31:28Z | unlock-exec | SBS `rw(0x7A)`, `rw(0x16)` after the bootloader-session reset | 0x7A=0 (locked after reset), status 0x00C0
+- 2026-10-08T05:54:40Z | lead | `uv run bms.py set-param 0x10 0x00004C50 -y` (user-approved fuse disarm) | 1st write try not accepted, retry OK; slot F1E2E, PFDL 0, diff = new record only; P10 0x52394C50 -> 0x00004C50; status 0x00C0, mfg reads 1980-00-00, PF clear; pre-image backups/df_pre_P10_20261007_235458.bin

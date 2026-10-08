@@ -18,7 +18,8 @@ the BMS over SMBus, dump its flash, and clear the PF so the board can be reused 
 - PF cleared (2026-10-07). BatteryStatus `0x48C0` → `0x00C0` (TERMINATE CHARGE/DISCHARGE gone),
   charge request 0 → 150 mA / 25.6 V, fuse-drive FET Q10 gate 3.3 V → 0 V. Calibration and config intact
   (FCC 2390 mAh, 387 cycles, model `SEC_VS9000NL`).
-- Next: replace F1 (Dexerials SCP 45 A), fit 6 matched cells (Samsung INR18650-30Q).
+- Fuse drive disarmed for assembly (ManufactureDate = 0, 2026-10-08). Next: F1 (Dexerials SCP 45 A) and 6 matched
+  Samsung INR21700-30T, per the cell install procedure below.
 
 ## How it works (short version)
 
@@ -88,19 +89,35 @@ Lower-level scripts run directly: `mpremote connect /dev/cu.usbmodem1101 cp pico
 
 Work on a bench supply through a resistor ladder (6 × 100 Ω, 22.2 V, 100 mA limit) with no real cells
 fitted, and keep a backup of the data flash before any write. This is a 6S lithium pack; the PF exists
-for a reason. Here it was a dead original cell. **When fitting cells:** the dead-cell check re-arms on
-every wake, so connect all cells/taps before the board can power up, and confirm `bms.py status` shows
-PF clear before fitting the new F1 (a re-trip would blow it).
+for a reason. Here it was a dead original cell.
 
-The firmware does **not balance cells** ([balancing.md](docs/re/balancing.md)), and it latches a PF on imbalance
-(code 0xCC: spread > 195 mV while charging above 3.7 V, or > 170/200 mV at rest, for 20 s) and on any cell
-> 4300 mV for 5 s (0xC8). Match the six cells to within ~20 mV at the same state of charge, don't fit cells above
-4.2 V, and check the spread with `bms.py status` after each of the first charges. P17's high word is a
-protection-disable mask restored at every boot; it must read 0 (`bms.py params`). The config header at 0xD410
-names `21700_30T`, so the original cells were probably 21700, not 18650: check the holder before buying cells.
+### Cell install procedure
 
-Fault/event logging has been frozen since the 0xCA trip (latest snapshot code >= 200, re-checked every boot), so
-new faults won't be logged until it's unfrozen ([events-boot.md](docs/re/events-boot.md): one set-param on P87,
-proposal pending). Reported FCC is capped at 2850 mAh; reseed the gauge after the swap ([gauge-scaling.md](docs/re/gauge-scaling.md)).
+F1 has to go on before the cells (no hot air near the cells), so the firmware's fuse drive is disarmed
+during assembly. The fuse pin (P1.1) is armed only while a PF bit is set **and** ManufactureDate (P10 high
+half) is non-zero (0x8769-0x8783, [afe-map.md](docs/re/afe-map.md)). With the date at 0 a PF still latches
+and the FETs still open; the fuse just isn't fired.
+
+1. **Done 2026-10-08:** `set-param 0x10 0x00004C50` (ManufactureDate 0x5239 -> 0; SBS 0x1B reads 1980-00-00).
+2. Cells: 6× Samsung INR21700-30T (the config header at 0xD410 names `21700_30T`), one batch, matched to
+   within ~20 mV, none above 4.2 V. Links carry the full pack current (logged peak −32 A, firmware limit
+   −40 A / 3 s): use 0.2 × 10 mm pure nickel doubled or Ni-Cu composite, not 6 mm strip, not nickel-plated steel.
+3. Fit F1, then connect the board: B- first, B1..B5 in order, B+ last. Keep the CN1 (and, for `set-param`,
+   TOOL0/RESET) wires reachable.
+4. `bms.py status`: six sane cells, spread < ~20 mV, PF clear. If 0xCA tripped while connecting,
+   `set-param 0x17 0` and re-check; the fuse can't fire meanwhile.
+5. **Only with PF clear:** restore the date, `set-param 0x10 0x52394C50`. The fuse arms the moment the date
+   is non-zero, so restoring it with a PF bit set blows F1.
+6. Unfreeze fault/event logging (frozen since the 0xCA trip, re-checked every boot): `set-param 0x87 0x00168F54`
+   (snapshot code 0xCA -> 0, history kept; [events-boot.md](docs/re/events-boot.md)). Takes effect at next wake.
+7. Optional, reseed the gauge for the new cells: unlock, write P32 `0x530CBEEF` -> `0x530C0000` (clears the
+   0xBEEF marker), re-lock, reset. FCC/Qmax/R tables/cycle count reseed from ROM, lifetime data kept
+   ([gauge-scaling.md](docs/re/gauge-scaling.md)). Reported FCC is capped at 2850 mAh either way.
+
+After that: the firmware does **not balance cells** ([balancing.md](docs/re/balancing.md)) and latches a PF on
+imbalance (0xCC: spread > 195 mV while charging above 3.7 V, or > 170/200 mV at rest, for 20 s) and on any
+cell > 4300 mV for 5 s (0xC8). Check the spread with `bms.py status` after each of the first charges.
+P17's high word is a protection-disable mask restored at every boot; it must read 0 (`bms.py params`).
+Not covered by the disarm: a second-level hardware protector, if fitted, can still blow F1 on cell over-voltage.
 
 Firmware images are Samsung SDI's; keep this repo private.

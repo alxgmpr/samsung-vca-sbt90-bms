@@ -2,7 +2,7 @@
 
 Device: Samsung VCA-SBT90 vacuum battery (Jet 90/75), 6S1P, 21.6 V nominal.
 Board: SEC VS9000N 6S1P, Rev R1.1, P01P-00200A, 2018-07-25.
-Goal: rebuild the pack (6× 18650) and clear the latched permanent-failure (PF)
+Goal: rebuild the pack (6× 21700) and clear the latched permanent-failure (PF)
 that keeps the BMS trying to blow the fuse.
 
 Session date: 2026-10-07.
@@ -118,7 +118,7 @@ Next: hardware rebuild (new F1, 6 cells).
 
 ## Rebuild reminder
 
-6× Samsung 30Q (or Molicel P28A / LG HG2), matched & balanced before assembly,
+6× Samsung INR21700-30T (original cell per config header), matched & balanced before assembly,
 spot-weld (don't solder cells). Connect taps in order B- ... B+.
 Before fitting cells: REMOVE the F1 bench bridge and the C+ wake clip.
 F1 replacement: Dexerials SCP, 45 A, same voltage class (or pull from a like board).
