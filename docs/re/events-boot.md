@@ -1,7 +1,7 @@
-# events-boot: wake/EEL check, P13.7, event dispatch, 0x80 modes, event log, 0xB4 flag, log "state" byte
+# Events and boot checks: 0xA7, P13.7, event dispatch, 0x80 modes, event log, 0xB4 flag, log minute byte
 
-Static analysis of `firmware/code.dis`. I made no board actions. The live RAM values below came from unlock-exec's
-unlocked read on 2026-10-08 at 05:31:07Z (logged in `_board_log.md`).
+Static analysis of `firmware/code.dis`. Live RAM values come from the gated SBS RAM read ([../protocol.md](../protocol.md))
+on 2026-10-08 at 05:31:07Z (logged in `_board_log.md`).
 Confidence tags: **VS** = verified-static, **VB** = verified on the board, **INF** = inferred.
 
 ## Summary
@@ -15,8 +15,8 @@ Confidence tags: **VS** = verified-static, **VB** = verified on the board, **INF
 | 4 | SBS 0x80 modes | 1 = reset, 2 = ship/shutdown, 3 = direct FET override, 4 = FET-request override, 5 = coulomb-counter (CC) calibration (factory only), 10 = flag with no reader; the others do nothing | VS (mode semantics partly INF) |
 | 5 | 0xF5 event codes | A separate numbering from the fault codes. **Event code 10 = "a cell moved ≥ 500 mV"**, which is why `0x0A` appears at the trip | VS |
 | 6 | 0xB4 flag | 0xFFB50.1 is persisted in P17 bit 17 (P17 hi bit 1) and survives reset. It clears through set-param P17 hi = 0, or through 0x87 (clear-all) | VS |
-| 7 | Log "state" byte | **Not a state.** It is P73 lo = minutes past the hour (0–59) of the timestamp P5B (hours) | VS |
-| — | **Log freeze** | The fault log, the event log and event counters n0–n4 are **frozen now** (live 0xFFE94 = 1), and they stay frozen across resets. A single set-param can unfreeze them; see "Unfreezing the logs" | VS + VB |
+| 7 | Log middle byte | **Not a state.** It is P73 lo = minutes past the hour (0–59) of the timestamp P5B (hours) | VS |
+| — | **Log freeze** | The fault log, the event log and event counters n0–n4 are **frozen now** (live 0xFFE94 = 1), and they stay frozen across resets. A single set-param can unfreeze them; see "Log freeze and unfreeze" | VS + VB |
 
 ## 1. Code 0xA7 (bit 39)
 
@@ -70,9 +70,9 @@ Posters: all 42 `call !0xB1B0` sites are enumerated, and 0xB1B0 is the only writ
 | 35–41, 48–50, 73–75, 78 | — | deferred (posted as 163–206) |
 
 - **Event 6 and event 12 have no poster.** The 0x7A re-lock (0x9522 → 0x3FE8 → 0xFFE80 = 0) and the event-12 path (0x953B, shutdown timer + log code 3) are dead code.
-- So the 0x7A unlock stays on until 0x7A is written with any other value (the 0x45BB writer) or the MCU resets. 0xFFE80 = 0 after reset (VB, unlock-exec).
+- So the 0x7A unlock stays on until 0x7A is written with any other value (the 0x45BB writer) or the MCU resets. 0xFFE80 = 0 after reset (VB).
 - Not verified: whether the unlock survives sleep. HALT/STOP keep RAM, so if the pack sleeps without a reset it probably stays unlocked. Re-lock explicitly.
-- `mov a,#6` at 0x954E is **event-log code 6** (CALLT [0xBC] = 0xAA82 → 0x7C85), not dispatcher event 6.
+- `mov a,#6` at 0x954E is **event-log code 6** (CALLT [0xBC] = 0xAA82 → 0x7C85), not dispatcher event 6, so a full charge does not touch 0x7A.
 
 **0x7E01 = gauge context load.** Called at boot (0x247B, in the init chain 0x939F) and after the 0x87 reset (0x7F16 clears 0xBEEF, then 0x7F20).
 - **If P32 lo = 0xBEEF:** copy P18/P19/P1A, the 15-float table at 0xFF57C and the 8-float table at 0xFF5B8 into the gauge structs at 0xFF8CE/0xFF818.
@@ -106,7 +106,7 @@ Posters: all 42 `call !0xB1B0` sites are enumerated, and 0xB1B0 is the only writ
 
 Live: 0xFFB48 = 0x0000, 0xFFB4A = 0 (no mode active).
 
-**The earlier ManufacturerAccess sweep:** writing 0x0010 to 0x00 started ship mode (0xAF7A). With the bench supply holding the terminal above 19.8 V it was probably cancelled, apart from the 8-tick FET-off window. The write also logged event code 1, but only if the log wasn't frozen (see "Unfreezing the logs").
+**The earlier ManufacturerAccess sweep:** writing 0x0010 to 0x00 started ship mode (0xAF7A). With the bench supply holding the terminal above 19.8 V it was probably cancelled, apart from the 8-tick FET-off window. The write also logged event code 1, but only if the log wasn't frozen (see "Log freeze and unfreeze").
 
 ## 5. Event log 0xF5 (writer 0x7C85)
 
@@ -130,7 +130,7 @@ Live: 0xFFB48 = 0x0000, 0xFFB4A = 0 (no mode active).
 The current event log is four entries of code 10 at ts 0x8F54, minute 22: cells collapsing in the same minute as the 0xCA trip. After that the PF froze the log, so there are no boot entries since.
 
 ```python
-# event-log (SBS 0xF5) codes, from docs/re/events-boot.md
+# event-log (SBS 0xF5) codes; merged into bms.py
 EVENT_NOTE = {
     1: "ship/shutdown request (MA 0x0010 or SBS 0x80 mode 2)",
     2: "deep-discharge power-off (UV, terminal < 1.8 V, ~2400 ticks idle)",
@@ -156,15 +156,15 @@ EVENT_NOTE = {
 - No other code clears 0xFFB50.
 - Live: 0xFFB50 = 0x0000, and P17 hi = 0.
 
-## 7. The log "state" byte = minutes past the hour
+## 7. The log middle byte = minutes past the hour
 
 - 0xFFE92 counts ticks to 60 (0xD534), then P73 b0 (0xFF6DC) increments (0x7ADF). When P73 b0 reaches 60 (0xD532), 0x78A0 clears it and increments P5B (0x74FE).
 - P73 b1/b2 are the same minute counters for discharging and charge-state time.
 - Log entries store `[P5B][P73 b0]`, so the byte is **minute 0–59 within powered hour P5B**. With a 1 s tick (INF) a log time is `P5B h + minute min`.
 - The three 0x5C entries at 0x8E46 (minutes 3, 5, 6) are three trips within one hour.
-- There is no state machine, so no `STATE_NOTE` dict. For bms.py, print it as `ts 0x8F54+22m` instead of `state 0x16`.
+- There is no state machine behind it. `bms.py log` prints it as `ts 0x8F54+22m`.
 
-## Log freeze and unfreeze (asked by the lead)
+## Log freeze and unfreeze
 
 **How the freeze works:**
 - 0xFFE94 = 1 blocks the fault-log writer (0x760F), the event-log writer (0x7C85) and the event counters (0x7648, n0–n4).
@@ -199,12 +199,12 @@ Notes for both options:
 - Nothing else re-sets 0xFFE94 unless a code ≥ 200 is logged again.
 - Take a backup first. The original 0xCA snapshot is also in `backups/df_post_unlock_20261007_233118.bin`.
 - `bms.py log` will then show code 0x00 for that snapshot (A), or keep showing 0xCA until it is overwritten (B).
-- This proposal is static only and needs approval. It is the same kind of write as the P17 clear (one EEL record).
+- Option A is step 6 of the README cell install procedure, run after assembly. It is the same kind of write as the P17 clear (one EEL record).
 
 ## Open questions
 
 - The net on U1 pin 30 (P13.7), and what holds it low on the bench. Needs a continuity check with the board unpowered.
 - The tick period behind 0xFFE7C.0 and dispatcher event 0. 1 s is inferred from the 60 × 60 minute/hour counters matching the ~1/h P5B rate.
 - 0xFFE68: assumed to be max cell mV (full-charge detect); not confirmed.
-- What AFE reg 3 = 0 (0xAA86) does before shutdown or reset. The afe-map fork has the register map.
+- What AFE reg 3 = 0 (0xAA86) does before shutdown or reset. [balancing.md](balancing.md) lists reg 0x03 as ADC/CC stop (inferred); the data sheet gives no address for it.
 - Whether 0xFFE80 (the unlock) survives sleep/STOP without a reset.

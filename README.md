@@ -37,23 +37,19 @@ the BMS over SMBus, dump its flash, and clear the PF so the board can be reused 
    powered hours before the bench work. Appending the record
    `17 E8 00 00 00 00` to the active block cleared it (`pico/pf_append.py`). Undo = append `17 E8 04 00 00 00`.
 
-Firmware RE (static, from `firmware/code.dis`):
+Docs:
 
 | Doc | Contents |
 |---|---|
-| [docs/re/thresholds.md](docs/re/thresholds.md) | Every protection limit/timer, constant address, fault code (all fixed in code flash 0xD550-0xD5E4) |
-| [docs/re/fault-codes.md](docs/re/fault-codes.md) | Code -> fault bit -> condition table for the @0x2422 table |
+| [docs/hardware.md](docs/hardware.md) | Board, pads, fuse drive, bench ladder and wake, Pico wiring, dead ends |
+| [docs/protocol.md](docs/protocol.md) | SMBus bootloader commands, data-flash EEL format, PF clear, SBS command table, 0x7A unlock and gated commands |
+| [docs/re/protection.md](docs/re/protection.md) | Every protection check: code -> bit -> condition -> threshold -> release |
 | [docs/re/param-names.md](docs/re/param-names.md) | Names/units for all 158 params (P00-P9D), SBS mappings |
-| [docs/re/balancing.md](docs/re/balancing.md) | Evidence that the firmware does no cell balancing |
-| [docs/re/unlock.md](docs/re/unlock.md) | SBS 0x7A = 0x835A unlock, gated vendor commands, no-bootloader param-write proposal |
 | [docs/re/afe-map.md](docs/re/afe-map.md) | AFE register map as used by the firmware (CC, OC/SC detectors, wake current, fuse on P1.1) |
 | [docs/re/gauge-scaling.md](docs/re/gauge-scaling.md) | Current unit (10 mA), coulomb counter, FCC learning (capped 2850 mAh), gauge reseed |
 | [docs/re/events-boot.md](docs/re/events-boot.md) | Event-log codes, 0x80 test modes, 0xA7/0xB4, log freeze/unfreeze |
-| [docs/re/unlock-exec.md](docs/re/unlock-exec.md) | On-board run of the SBS unlock and a same-value param write |
+| [docs/re/balancing.md](docs/re/balancing.md) | Evidence that the firmware does no cell balancing |
 | [docs/re/_board_log.md](docs/re/_board_log.md) | Log of every board action taken during the RE |
-
-Full details: [docs/SESSION_NOTES.md](docs/SESSION_NOTES.md) (hardware map, wiring, dead ends) and
-[docs/WRITE_PLAN.md](docs/WRITE_PLAN.md) (bootloader protocol decode, write proof, PF identification).
 
 ## Layout
 
@@ -66,7 +62,7 @@ Full details: [docs/SESSION_NOTES.md](docs/SESSION_NOTES.md) (hardware map, wiri
 | `backups/` | Verified dumps with SHA256SUMS, SBS register backups |
 | `dumps/` | Raw dump/probe outputs |
 | `logs/` | Session logs from each run |
-| `docs/` | Notes and the write/PF write-up |
+| `docs/` | Hardware and protocol reference; `docs/re/` firmware RE |
 | `images/` | Photos |
 
 ## Usage

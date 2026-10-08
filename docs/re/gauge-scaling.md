@@ -1,7 +1,7 @@
-# Gauge scaling, throughput counters, FCC learning (gauge-scaling)
+# Gauge scaling, throughput counters, FCC learning
 
 Static analysis of `firmware/codeflash.bin` / `code.dis`; values from `backups/df_20261007_221649.bin`.
-No board use. Note for reading `code.dis`: objdump (plain rl78) prints the RL78-S3 multiply/divide
+Note for reading `code.dis`: objdump (plain rl78) prints the RL78-S3 multiply/divide
 instructions as `mov 0xffffb, #n`: `#1` = MULHU (BCAX = AX*BC), `#2` = MULH (signed), `#3` = DIVHU
 (AX = AX/DE), `#11` = DIVWU (BCAX = BCAX/HLDE).
 
@@ -18,8 +18,8 @@ instructions as `mov 0xffffb, #n`: `#1` = MULHU (BCAX = AX*BC), `#2` = MULH (sig
 SBS AverageCurrent (0x0B, FFE56) = low-pass (τ 3.75 s, 0x2540) of `I_float`, divided by 10.0 (0x82AE): also 10 mA.
 This matches IPScale ×10 in SpecificationInfo 0x1A = 0x1031.
 
-**Corrections to PARAM_NAMES:** the lifetime current extremes are in 10 mA units. P53 hi max charge current
-= 138 → 1.38 A; P54 lo max discharge current = −3199 → −32.0 A (not mA).
+The lifetime current extremes are in the same 10 mA units: P53 hi max charge current = 138 → 1.38 A; P54 lo max
+discharge current = −3199 → −32.0 A.
 
 ## 2. Throughput / time counters — verified-static unless marked
 
@@ -33,8 +33,7 @@ called from event 41 via 0xAB50):
 | P5C hi | FF682 | I < 0 (FFE54 bit 15) | same, **1 Ah** | 504 → **504 Ah discharged** |
 | P3D | FF604 (u32) | FFB71 set and I > 0 (0x7812) | 0x23280 = 144 000 units = **10 mAh** (0x782C) | 43620 → **436 Ah of re-charge after a full charge** |
 
-The param-names doc read the 0xDBBA00 compare as 0xDBA00 (900 000); the high word is 219 = 0xDB and the low word 0xBA00.
-It also named P5D lo "total throughput", but 0x7769 `call 0x7D53; bc` makes it charge-only.
+The 0xDBBA00 compare is high word 219 = 0xDB, low word 0xBA00. P5D lo is charge-only (0x7769 `call 0x7D53; bc`).
 
 **P3D logic (0x77E7–0x7812):** FFB72 mirrors the fully-charged flag (FFE9F.0, via callt [0xB4] = 0x81FB). On a
 full → not-full transition FFB71 is set; it is cleared when FB55.2 drops (charger/terminal-present flag,
@@ -54,12 +53,11 @@ Which event drives FFE92 (1 s or other) was not traced; "hours" relies on the ex
 - n=3 (P50 hi, 6227) = **full-charge detections.** Event 23 is posted at 0x7F6A when 0x8259 holds for 0xD48C = 120
   ticks (30 s): max cell FFE68 ≥ FFB22 (= 4100 mV, 0xD488) and charge current ≤ 0xD48A = 10 counts (100 mA).
   The flag (FFE9F.0) clears when RSOC < 0xD4A0. The handler 0x954A then writes **event-log (0xF5) code 6** via
-  callt [0xBC] → 0x7C85. That is not the dispatcher event 6 (0x9522 relock), so a full charge does **not** re-lock
-  0x7A. Corrected per events-boot; callt [0xBC] = 0xAA82 checked.
+  callt [0xBC] (= 0xAA82) → 0x7C85.
   6227 full charges vs 387 cycles fits a vacuum that tops up on the dock (see P3D).
 - n=4 (P51 lo, 38) = **fully-discharged entries.** Event 30 is posted at 0x7FBA when fault bit 2 (code 0x14, UV) is
   first set; it also sets FFE9F.1 and FF934.4. It equals the 0x14 lifetime fault counter (38). Event-log code 7 follows.
-- Agrees with events-boot's independent trace.
+- Matches [events-boot.md](events-boot.md).
 
 ## 3. Gauge model: P18, P1A, the float tables — addresses verified-static, meanings partly inferred
 
@@ -120,9 +118,10 @@ Reseed the gauge after the new cells are in and `status` shows PF clear. Otherwi
 - FCC stays at the old cells' 2390 mAh and only creeps toward the real value after several deep cycles.
 - The aged P2A–P31 resistance table (up to 4× the defaults at high SOC) skews SOC under load.
 
-Two ways (both need the 0x7A unlock; **PROPOSAL, needs approval**):
+Use the surgical reseed (needs the 0x7A unlock, [../protocol.md](../protocol.md); README install step 7,
+pending approval):
 
-1. **Surgical (preferred).** Clear only the 0xBEEF marker, then let the firmware reseed:
+1. **Surgical.** Clear only the 0xBEEF marker, then let the firmware reseed:
    - `bms.py backup`
    - `ww(0x7A, 0x835A)`
    - `wb(0x84, [0xC8, 0x00])`, the P32 offset (0xC8 = 0x32·4)
@@ -134,8 +133,9 @@ Two ways (both need the 0x7A unlock; **PROPOSAL, needs approval**):
    Undo: write the old P18–P39 values from the backup with `set-param`.
    Caveat: whether 0x8A writes take effect only after the persist path, or whether 0x7E01 also runs without a
    reset, was not checked. Read P32 after the write and after the reset.
-2. **0x87 mode 3:** the same reseed, but it also zeroes P17, P3A–P3D and P39 (unlock doc). It is simpler, but loses
-   the usage bins.
+2. **Not 0x87 mode 3.** It does the same reseed, but every 0x87 mode also runs clear-all 0xAA55 → 0x7547, which
+   zeroes P17, P3A–P3D, P39 and all of P3F–P9D (lifetime counters, histograms, snapshots, both logs;
+   [events-boot.md](events-boot.md)).
 
 Either way FCC caps at 2850 mAh even if the new cells hold more. That is a reporting limit, not a protection limit.
 
@@ -145,24 +145,6 @@ Either way FCC caps at 2850 mAh even if the new cells hold more. That is a repor
 - Which of the ROM R tables (ids 3/4, 6/7) feed the learned tables, and on what axis (temperature or direction).
 - The tick source of FFE92 (hour counters).
 
-## PARAM_NAMES patch (changed entries only)
+## Param names
 
-```python
-PARAM_NAMES_PATCH = {
-    0x18: ("Qmax: learned chemical capacity (SBS 0xA3)", "float mAh", "seed 3195.0 @0xD98C x parallel 0xD982 (0x7D9A/0x7E14); SOC denom 0x8200 [gauge-scaling]"),
-    0x19: ("FullChargeCapacity", "float mAh", "SBS 0x10; seed 2850 @0xD960; learned 0x3610 (>=40% SOC span), clamped <=2850 [gauge-scaling]"),
-    0x1A: ("SOC at charge-term OCV (4160 mV)", "float %", "seed 0xA32F OCV->SOC tables @0xD6B0/0xD630 of 4160 @0xD96E [gauge-scaling]"),
-    **{0x1B + i: (f"learned cell R vs SOC [{p}%]", "float ohm", "15-pt grid @0xD7B0, default @0xD904, RAM FF818 (SBS 0xAA); meaning inf [gauge-scaling]")
-       for i, p in enumerate((0, 4, 8, 12, 16, 20, 28, 36, 44, 52, 60, 68, 76, 84, 100))},
-    **{0x2A + i: (f"learned R table 2 [{p}% SOC]", "float ohm", "8-pt grid @0xD7EC, default @0xD940, RAM FF854 (SBS 0xAB); meaning inf [gauge-scaling]")
-       for i, p in enumerate((10, 20, 30, 50, 70, 80, 90, 96))},
-    0x3D: ("charge after leaving full while on charger (dock top-up)", "u32 x10 mAh", "FFE30/144000 while FFB71 & I>0 (0x77E7-0x7840) [gauge-scaling]"),
-    0x50: ("cycle events; full-charge detections (event 23)", "u16;u16", "n=2 0x815D; n=3 0x954A, detect 0x8259 [gauge-scaling]"),
-    0x51: ("fully-discharged entries (UV bit 2, event 30); max-cell idx+1 (b2); min-cell idx+1 (b3)", "u16;u8;u8", "n=4 0x9552 via 0x7FBA; 0x76BD/0x76D9 [gauge-scaling]"),
-    0x53: ("lifetime max P+ voltage; max charge current", "mV;10 mA", "0x76EC/0x7708; current unit from 0x95E5 [gauge-scaling]"),
-    0x54: ("lifetime max discharge current; max temp", "s16 10 mA;0.1K", "0x7720/0x772E; current unit from 0x95E5 [gauge-scaling]"),
-    0x5B: ("powered hours (log timestamp); discharging hours (I<0)", "h;h", "0x78AB/0x78BF, 0x7AE7 [gauge-scaling]"),
-    0x5C: ("charging hours (I>0); discharge throughput", "h;Ah", "0x7AEC/0x78D3; 0x77CD rollover 14400000 FFE30 units = 1 Ah [gauge-scaling]"),
-    0x5D: ("charge throughput; hist[0] (V0,T0)", "Ah;h", "0x7769 I>0 only, 0x778E 1 Ah rollover; 0x79F4 [gauge-scaling]"),
-}
-```
+The param facts above are merged into the `PARAM_NAMES` dict in [param-names.md](param-names.md) and `bms.py`.
