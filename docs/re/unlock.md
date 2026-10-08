@@ -83,6 +83,8 @@ Not gated by 0x7A but related:
 
 ## 0x87 reset modes (0x48E4)
 
+> **Correction (events-boot.md, unlock-exec.md):** every 0x87 mode also ends in clear-all 0xAA55 -> 0x7547, which zeroes **P3F-P9D** (lifetime counters, min/max, hours, histograms, snapshots, fault and event logs). Back up first. For a gauge-only reseed prefer clearing the 0xBEEF marker in P32 (gauge-scaling.md).
+
 Every mode runs the common tail: 0xAA55 clears **P17 (PF bits, 0xFF56C) = 0**, copies P3A–P3D from
 defaults 0xDAE8 (all zero), then 0x7F16 clears P32[15:0] (0xFF5D8) and calls 0x7E01. All writes
 are persisted. Against the current image (backups/df_20261007_221649.bin):

@@ -156,7 +156,7 @@ CODE_NOTE = {
     0xA3: "boot: config checksum mismatch",
     0xA4: "boot: data-flash param checksum mismatch",
     0xA5: "boot: config signature 'SV' missing",
-    0xA7: "boot: wake-state check (0xFFE96 in 4/5)",
+    0xA7: "data-flash write failure (0xFFE96 = 4 verify / 5 erase-retry)",
     0xB4: "measurement implausible (cell > 5 V / terminal > 28 V); disables V checks",
     0xC8: "PF: cell OV, max cell > 4300 mV 5 s",
     0xC9: "PF: no setter (only restored from P17)",
@@ -164,6 +164,20 @@ CODE_NOTE = {
     0xCC: "PF: cell imbalance, delta > 195 mV charging (> 170/200 mV at rest) 20 s",
     0xDC: "PF: FET failure, current with FET off (> 1 A) 20 s",
 }
+# event-log (SBS 0xF5) codes are their own numbering, from docs/re/events-boot.md
+EVENT_NOTE = {
+    1: "ship/shutdown request (MA 0x0010 or SBS 0x80 mode 2)",
+    2: "deep-discharge power-off (UV, terminal < 1.8 V, ~2400 ticks idle)",
+    3: "shutdown timer via event 12 (dead in this firmware)",
+    4: "firmware reset / power-down (0x80 mode 1, queue overflow, 0xA0 path)",
+    5: "boot / wake",
+    6: "full charge reached (cell >= 4100 mV, taper current, 120 ticks)",
+    7: "under-voltage fault 0x14 first set",
+    8: "charge started (I > 0 for 12 ticks)",
+    9: "charge ended (I <= 0 for 12 ticks)",
+    10: "cell voltage jump: a cell moved >= 500 mV since last logged set",
+}
+
 def snip_log():
     return f"""
 import smb
@@ -188,8 +202,9 @@ def code_info(c):
 def decode_log(r):
     now = int.from_bytes(r[0xE7][:2], "little")
     out = {"now": now}
-    for blk, name in ((0xF3, "fault_log"), (0xF5, "event_log")):
-        out[name] = [dict(ts=int.from_bytes(r[blk][k:k + 2], "little"), state=r[blk][k + 2], **code_info(r[blk][k + 3]))
+    for blk, name in ((0xF3, "fault_log"), (0xF5, "event_log")):  # [ts=P5B hour][minute][code]
+        info = code_info if blk == 0xF3 else lambda c: {"code": c, "bit": None, "permanent": False, "note": EVENT_NOTE.get(c, "")}
+        out[name] = [dict(ts=int.from_bytes(r[blk][k:k + 2], "little"), minute=r[blk][k + 2], **info(r[blk][k + 3]))
                      for k in range(0, len(r[blk]) - 3, 4)]
     out["snapshots"] = []
     for blk in (0xF0, 0xF1, 0xF2):
@@ -204,7 +219,7 @@ def print_log(L):
         print(f"{title} (block 0x{blk:02X}, ring order):")
         for e in L[name]:
             kind = "" if e["bit"] is None else f"bit {e['bit']}" + (" PERMANENT" if e["permanent"] else "")
-            print(f"  ts 0x{e['ts']:04X} ({L['now'] - e['ts']:>5} ago)  state 0x{e['state']:02X}  0x{e['code']:02X} {kind:<14} {e['note']}")
+            print(f"  ts 0x{e['ts']:04X}+{e['minute']:02}m ({L['now'] - e['ts']:>5} h ago)  0x{e['code']:02X} {kind:<14} {e['note']}")
     print("snapshots (last 3 distinct codes):")
     for n in L["snapshots"]:
         print(f"  ts 0x{n['ts']:04X} code 0x{n['code']:02X}  cells {n['cells_mv']} mV  raw {' '.join(map(str, n['raw']))}")
@@ -304,6 +319,26 @@ PARAM_NAMES = {
     0x9C: ("event log entry 2", "u16;u8;u8", "vs 0x7C85"),
     0x9D: ("event log entry 3", "u16;u8;u8", "vs 0x7C85"),
 }
+# gauge/scaling corrections, from docs/re/gauge-scaling.md
+PARAM_NAMES_PATCH = {
+    0x18: ("Qmax: learned chemical capacity (SBS 0xA3)", "float mAh", "seed 3195.0 @0xD98C x parallel 0xD982 (0x7D9A/0x7E14); SOC denom 0x8200 [gauge-scaling]"),
+    0x19: ("FullChargeCapacity", "float mAh", "SBS 0x10; seed 2850 @0xD960; learned 0x3610 (>=40% SOC span), clamped <=2850 [gauge-scaling]"),
+    0x1A: ("SOC at charge-term OCV (4160 mV)", "float %", "seed 0xA32F OCV->SOC tables @0xD6B0/0xD630 of 4160 @0xD96E [gauge-scaling]"),
+    **{0x1B + i: (f"learned cell R vs SOC [{p}%]", "float ohm", "15-pt grid @0xD7B0, default @0xD904, RAM FF818 (SBS 0xAA); meaning inf [gauge-scaling]")
+       for i, p in enumerate((0, 4, 8, 12, 16, 20, 28, 36, 44, 52, 60, 68, 76, 84, 100))},
+    **{0x2A + i: (f"learned R table 2 [{p}% SOC]", "float ohm", "8-pt grid @0xD7EC, default @0xD940, RAM FF854 (SBS 0xAB); meaning inf [gauge-scaling]")
+       for i, p in enumerate((10, 20, 30, 50, 70, 80, 90, 96))},
+    0x3D: ("charge after leaving full while on charger (dock top-up)", "u32 x10 mAh", "FFE30/144000 while FFB71 & I>0 (0x77E7-0x7840) [gauge-scaling]"),
+    0x50: ("cycle events; full-charge detections (event 23)", "u16;u16", "n=2 0x815D; n=3 0x954A, detect 0x8259 [gauge-scaling]"),
+    0x51: ("fully-discharged entries (UV bit 2, event 30); max-cell idx+1 (b2); min-cell idx+1 (b3)", "u16;u8;u8", "n=4 0x9552 via 0x7FBA; 0x76BD/0x76D9 [gauge-scaling]"),
+    0x53: ("lifetime max P+ voltage; max charge current", "mV;10 mA", "0x76EC/0x7708; current unit from 0x95E5 [gauge-scaling]"),
+    0x54: ("lifetime max discharge current; max temp", "s16 10 mA;0.1K", "0x7720/0x772E; current unit from 0x95E5 [gauge-scaling]"),
+    0x5B: ("powered hours (log timestamp); discharging hours (I<0)", "h;h", "0x78AB/0x78BF, 0x7AE7 [gauge-scaling]"),
+    0x5C: ("charging hours (I>0); discharge throughput", "h;Ah", "0x7AEC/0x78D3; 0x77CD rollover 14400000 FFE30 units = 1 Ah [gauge-scaling]"),
+    0x5D: ("charge throughput; hist[0] (V0,T0)", "Ah;h", "0x7769 I>0 only, 0x778E 1 Ah rollover; 0x79F4 [gauge-scaling]"),
+}
+PARAM_NAMES.update(PARAM_NAMES_PATCH)
+
 def param_rows(img):
     rows = []
     for k, (addr, v) in sorted(records(img).items()):
@@ -335,8 +370,8 @@ def write_report(st, L, img, base):
           f"- capacity {st['rsoc_pct']}% {st['remaining_mah']}/{st['fcc_mah']} mAh (design {st['design_mah']})",
           f"- charge request {st['charge_req_ma']} mA @ {st['charge_req_mv']} mV",
           f"- status 0x{st['status']:04X} {' '.join(st['status_flags'])}; PF {'LIKELY LATCHED' if st['pf_likely'] else 'clear'}",
-          "", f"## Fault log (now 0x{L['now']:04X})", "", "| ts | ago | state | code | bit | note |", "|---|---|---|---|---|---|"]
-    md += [f"| 0x{e['ts']:04X} | {L['now'] - e['ts']} | 0x{e['state']:02X} | 0x{e['code']:02X} | {e['bit']}{' PF' if e['permanent'] else ''} | {e['note']} |"
+          "", f"## Fault log (now 0x{L['now']:04X})", "", "| ts (h+min) | h ago | code | bit | note |", "|---|---|---|---|---|"]
+    md += [f"| 0x{e['ts']:04X}+{e['minute']}m | {L['now'] - e['ts']} | 0x{e['code']:02X} | {e['bit']}{' PF' if e['permanent'] else ''} | {e['note']} |"
            for e in L["fault_log"]]
     md += ["", "## Params", "", "| idx | raw | float | name | unit |", "|---|---|---|---|---|"]
     fl = lambda x: "" if x is None else f"{x:.6g}"
@@ -393,8 +428,10 @@ def _selftest():
     assert records(bytes(img)) == {0x17: (0xF1810, 0), 0x01: (0xF180A, 1)}  # newest wins, block 2
     assert status_flags(0x48C0) == ["TERMINATE_CHARGE_ALARM", "TERMINATE_DISCHARGE_ALARM", "INITIALIZED", "DISCHARGING"]
     snap = struct.pack("<12H", 0, 0, 0, 0x8F54, 0xCA00, 0, 3566, 1173, 0, 1178, 3562, 2682)
-    L = decode_log({0xE7: b"\x0a\x91", 0xF3: bytes([0x54, 0x8F, 0x11, 0xCA]), 0xF5: b"", 0xF0: snap, 0xF1: b"", 0xF2: b""})
+    L = decode_log({0xE7: b"\x0a\x91", 0xF3: bytes([0x54, 0x8F, 0x16, 0xCA]), 0xF5: bytes([0x54, 0x8F, 0x16, 10]), 0xF0: snap, 0xF1: b"", 0xF2: b""})
     assert L["now"] == 0x910A and L["fault_log"][0]["bit"] == 50 and L["fault_log"][0]["permanent"]
+    assert L["fault_log"][0]["minute"] == 22 and L["event_log"][0]["note"].startswith("cell voltage jump")
+    assert PARAM_NAMES[0x19][0] == "FullChargeCapacity" and len(PARAM_NAMES) == 158
     assert L["snapshots"] == [{"ts": 0x8F54, "code": 0xCA, "cells_mv": [3566, 1173, 0, 1178, 3562, 2682], "raw": [0, 0, 0]}]
     r = dict.fromkeys(list(SBS_WORDS) + list(range(0x3A, 0x40)), 0); r.update(dict.fromkeys(SBS_BLOCKS, "x")); r.update({0x08: 2981, 0x0A: 0xFFFF, 0x16: 0x48C0})
     st = decode_status(r)

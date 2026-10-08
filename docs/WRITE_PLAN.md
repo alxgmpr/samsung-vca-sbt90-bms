@@ -224,7 +224,7 @@ count 0xFF4EB, exec length 0xFF4EC, PEC 0xFF514). Corrections to earlier notes:
   (0x83E4 tests mask 0x7FFF<<48). **P0x17[15:0] = mask bits 48..63** (persisted by 0xAB10, restored at
   boot by 0x839D). Unit had P0x17 = 4 => PF bit 50. Gated clear handler 0x48E4 (needs 0xFFE80==0x835A)
   mode 3 = gauge-learning reset P17-P3E from defaults @0xDA5C (not used).
-- AFE reg 0x58 written 0x40/0xC0 at 0x51E3 (also on every boot) — likely FET enable, not the fuse.
+- AFE reg 0x58 written 0x40/0xC0 at 0x51E3 (also on every boot) — likely FET enable, not the fuse. **Correction (docs/re/afe-map.md):** reg 0x58 is the coulomb-counter control (0x40 enable, 0xC0 enable+start); the fuse is driven by MCU pin P1.1.
 - **Fix applied:** appended `17 E8 00 00 00 00` at 0xF1DE6 (active block 0xF1800, first free slot) via
   pico/pf_append.py. Diff = only those 6 bytes. Pre-write image: firmware/df_pre_pfclear.hex.
 - Result after reset (x3, + 60 s): BatteryStatus 0x48C0 -> 0x00C0, MA 0xA000 -> 0x2080,

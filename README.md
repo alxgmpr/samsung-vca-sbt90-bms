@@ -45,6 +45,10 @@ Firmware RE (static, from `firmware/code.dis`):
 | [docs/re/param-names.md](docs/re/param-names.md) | Names/units for all 158 params (P00-P9D), SBS mappings |
 | [docs/re/balancing.md](docs/re/balancing.md) | Evidence that the firmware does no cell balancing |
 | [docs/re/unlock.md](docs/re/unlock.md) | SBS 0x7A = 0x835A unlock, gated vendor commands, no-bootloader param-write proposal |
+| [docs/re/afe-map.md](docs/re/afe-map.md) | AFE register map as used by the firmware (CC, OC/SC detectors, wake current, fuse on P1.1) |
+| [docs/re/gauge-scaling.md](docs/re/gauge-scaling.md) | Current unit (10 mA), coulomb counter, FCC learning (capped 2850 mAh), gauge reseed |
+| [docs/re/events-boot.md](docs/re/events-boot.md) | Event-log codes, 0x80 test modes, 0xA7/0xB4, log freeze/unfreeze |
+| [docs/re/unlock-exec.md](docs/re/unlock-exec.md) | On-board run of the SBS unlock and a same-value param write |
 | [docs/re/_board_log.md](docs/re/_board_log.md) | Log of every board action taken during the RE |
 
 Full details: [docs/SESSION_NOTES.md](docs/SESSION_NOTES.md) (hardware map, wiring, dead ends) and
@@ -94,5 +98,9 @@ The firmware does **not balance cells** ([balancing.md](docs/re/balancing.md)), 
 4.2 V, and check the spread with `bms.py status` after each of the first charges. P17's high word is a
 protection-disable mask restored at every boot; it must read 0 (`bms.py params`). The config header at 0xD410
 names `21700_30T`, so the original cells were probably 21700, not 18650: check the holder before buying cells.
+
+Fault/event logging has been frozen since the 0xCA trip (latest snapshot code >= 200, re-checked every boot), so
+new faults won't be logged until it's unfrozen ([events-boot.md](docs/re/events-boot.md): one set-param on P87,
+proposal pending). Reported FCC is capped at 2850 mAh; reseed the gauge after the swap ([gauge-scaling.md](docs/re/gauge-scaling.md)).
 
 Firmware images are Samsung SDI's; keep this repo private.
