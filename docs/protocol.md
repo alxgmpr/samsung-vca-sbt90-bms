@@ -24,8 +24,9 @@ running PEC 0xFF514 (= SMBus PEC, CRC-8 poly 0x07 init 0, over `[0x16, cmd, coun
 | 0x24 | `[24][5][a0 a1 a2][len lo hi][PEC]` | PFDL blank check (cmd 8), read-only | result via 0x26 |
 | 0x26 | read | blank-check result (0xFF4E6): 0xFF blank, 0x00 not blank, 0xCA error | verified-on-board |
 | 0x21 | `[21][1][blk][PEC]` | data-flash 1 KB block **erase** (blk 0..3, PFDL cmd 3) | not used |
-| 0x20, 0x27 `[b0 b1]`, 0x25 `[b]` | block-write style | code-flash block ops | guards exclude blocks 0x37–0x3E (the bootloader). Not used |
-| 0xFD | `[FD][addr3][len2][data…]` (no count byte) | code-flash write; bounds ≤ ~0xDBFF plus a 0x0F0000–0x0F0FFF window | 0xE82F word write. Not a data-flash path |
+| 0x20 `[20][2][b0 b1][PEC]` | block-write style | **code-flash 1 KB block erase**, blocks b0..b1 (0xE88B) | arg guard 0xE6E6: b0 ≤ b1, blocks ≥ 0x37 refused (bootloader), so 0x36 (0xD800–0xDBFF) is the last erasable block. PEC = CRC-8 over `[0x16, cmd, count, payload]`. Verified-on-board (blocks 0x2F, 0x36) |
+| 0x25 `[25][1][b][PEC]`, 0x27 `[27][2][b0 b1][PEC]` | block-write style | code-flash block / range blank check (0xE94B / 0xE992); result via read 0x26: 0xFF blank, block number if not blank, 0xCA error. Read 0x70 = 0 blank / 0x1B not blank | Verified-on-board |
+| 0xFD | `[FD][a0 a1 a2][n0 n1][d0 … d(n-1)]`, no count byte, **no PEC**, ended by STOP (slave state 8, 0xF076) | **code-flash write**. Every 4th data byte programs one word + internal verify inside the ISR (0xF0E1 → 0xE7CD → 0xE82F → 0xF73E; ~11 ms per word, no SCL timeout on SoftI2C), result in read 0x70 (0 = OK) | header checked at the 5th byte by 0xE445 → 0xE591: n ≤ 0xFFFC, n multiple of 4, start ≤ 0xDBFF, end ≤ 0xDC00 inclusive; invalid = last header byte NACKed (SoftI2C `writeto` returns the ACK count, it does not raise). Does not erase: target must be blank. Use one 4-byte word per transaction, 4-aligned. Verified-on-board (0xBC00 rehearsal, block 0x36 rewrite) |
 | 0xFA | block-write style | flash → buffer read | |
 | 0x00 | `[00][1][D0][PEC]` | leave bootloader, run the app | |
 | 0x55, 0x59, 0x7C, 0xF0 | read | status/handshake reads. 0x55 is not a mode switch; no mode is needed for writes | |

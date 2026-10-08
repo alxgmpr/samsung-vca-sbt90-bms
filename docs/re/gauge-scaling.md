@@ -137,7 +137,9 @@ pending approval):
    zeroes P17, P3A–P3D, P39 and all of P3F–P9D (lifetime counters, histograms, snapshots, both logs;
    [events-boot.md](events-boot.md)).
 
-Either way FCC caps at 2850 mAh even if the new cells hold more. That is a reporting limit, not a protection limit.
+Either way FCC caps at the constant at code flash 0xD960 even if the new cells hold more. That is a reporting limit, not a protection limit.
+
+**Patched 2026-10-08 (for 40T cells):** 0xD960 float 2850.0 → **4000.0** (FCC clamp at 0x3725 and reseed value at 0x7E01 share it) and the Qmax seed at 0xD98C 3195.0 → **4200.0** (read only at 0x7D9A/0x7E14). 4 bytes changed in code-flash block 0x36 (0xD961, 0xD962, 0xD98D, 0xD98E); outside the 0xA3 boot checksum (0x0000–0x0FFF + 0x2000–0xD3FD). Neither takes effect on the live gauge until the reseed above (P18/P19 keep their learned values). Stock image: `firmware/codeflash.bin`; patched: `firmware/codeflash_fccpatch.bin`. Undo: rewrite block 0x36 from the stock image (docs/protocol.md 0x20 + 0xFD).
 
 ## Open questions
 - FB54.2 (60 s tick) and FB55.2 (charger/terminal present): the setters were not traced.
