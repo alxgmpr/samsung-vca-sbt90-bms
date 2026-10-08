@@ -1,0 +1,1462 @@
+{
+ "status": {
+  "model": "SEC_VS9000NL",
+  "mfg_name": "SDI",
+  "device": "       ",
+  "chem": "LION",
+  "serial": 415,
+  "mfg_date": "2021-01-25",
+  "pack_mv": 22241,
+  "current_ma": 0,
+  "avg_current_ma": 0,
+  "temp_c": 29.2,
+  "cells_mv": [
+   3724,
+   3712,
+   3700,
+   3703,
+   3698,
+   3704
+  ],
+  "spread_mv": 26,
+  "rsoc_pct": 50,
+  "remaining_mah": 1171,
+  "fcc_mah": 2390,
+  "design_mah": 2850,
+  "design_mv": 21900,
+  "cycles": 387,
+  "charge_req_ma": 150,
+  "charge_req_mv": 25600,
+  "status": 192,
+  "status_flags": [
+   "INITIALIZED",
+   "DISCHARGING"
+  ],
+  "mfr_access": 8320,
+  "pf_likely": false
+ },
+ "log": {
+  "now": 37133,
+  "fault_log": [
+   {
+    "ts": 36422,
+    "state": 3,
+    "code": 92,
+    "bit": 21,
+    "permanent": false,
+    "note": "terminal/charger OV: >= 26.0 V for 5 cycles"
+   },
+   {
+    "ts": 36422,
+    "state": 5,
+    "code": 92,
+    "bit": 21,
+    "permanent": false,
+    "note": "terminal/charger OV: >= 26.0 V for 5 cycles"
+   },
+   {
+    "ts": 36422,
+    "state": 6,
+    "code": 92,
+    "bit": 21,
+    "permanent": false,
+    "note": "terminal/charger OV: >= 26.0 V for 5 cycles"
+   },
+   {
+    "ts": 36527,
+    "state": 0,
+    "code": 92,
+    "bit": 21,
+    "permanent": false,
+    "note": "terminal/charger OV: >= 26.0 V for 5 cycles"
+   },
+   {
+    "ts": 36592,
+    "state": 46,
+    "code": 92,
+    "bit": 21,
+    "permanent": false,
+    "note": "terminal/charger OV: >= 26.0 V for 5 cycles"
+   },
+   {
+    "ts": 36692,
+    "state": 22,
+    "code": 20,
+    "bit": 2,
+    "permanent": false,
+    "note": "cell UV: min cell < 2600 mV, not charging, 1 s (rel when charger seen)"
+   },
+   {
+    "ts": 36692,
+    "state": 22,
+    "code": 22,
+    "bit": 4,
+    "permanent": false,
+    "note": "deep UV: min cell < 2500 mV with terminal < 1.8 V, 5 s (0x60CA)"
+   },
+   {
+    "ts": 36692,
+    "state": 22,
+    "code": 202,
+    "bit": 50,
+    "permanent": true,
+    "note": "PF: dead cell, min cell < 1000 mV for ~20 checks after wake (0x6890)"
+   }
+  ],
+  "event_log": [
+   {
+    "ts": 36692,
+    "state": 22,
+    "code": 10,
+    "bit": 0,
+    "permanent": false,
+    "note": "cell OV: max cell > 4230 mV 3 s (rel < 4100)"
+   },
+   {
+    "ts": 36692,
+    "state": 22,
+    "code": 10,
+    "bit": 0,
+    "permanent": false,
+    "note": "cell OV: max cell > 4230 mV 3 s (rel < 4100)"
+   },
+   {
+    "ts": 36692,
+    "state": 22,
+    "code": 10,
+    "bit": 0,
+    "permanent": false,
+    "note": "cell OV: max cell > 4230 mV 3 s (rel < 4100)"
+   },
+   {
+    "ts": 36692,
+    "state": 22,
+    "code": 10,
+    "bit": 0,
+    "permanent": false,
+    "note": "cell OV: max cell > 4230 mV 3 s (rel < 4100)"
+   }
+  ],
+  "snapshots": [
+   {
+    "ts": 36692,
+    "code": 22,
+    "cells_mv": [
+     3500,
+     2133,
+     0,
+     2137,
+     3496,
+     2577
+    ],
+    "raw": [
+     0,
+     3300,
+     798
+    ]
+   },
+   {
+    "ts": 36692,
+    "code": 202,
+    "cells_mv": [
+     3566,
+     1173,
+     0,
+     1178,
+     3562,
+     2682
+    ],
+    "raw": [
+     0,
+     3311,
+     25940
+    ]
+   },
+   {
+    "ts": 36692,
+    "code": 20,
+    "cells_mv": [
+     3128,
+     2,
+     0,
+     0,
+     3244,
+     3006
+    ],
+    "raw": [
+     0,
+     3297,
+     824
+    ]
+   }
+  ]
+ },
+ "params": [
+  {
+   "idx": 0,
+   "addr": 989188,
+   "raw": 582526255,
+   "float": null,
+   "name": "cal checksum (b0) / 0xA5 sig (b1); cell1 ADC @2200mV (hi)",
+   "unit": "u8;u8;u16 cnt"
+  },
+  {
+   "idx": 1,
+   "addr": 989194,
+   "raw": 582361781,
+   "float": null,
+   "name": "cell2 / cell3 ADC @2200mV",
+   "unit": "u16;u16 cnt"
+  },
+  {
+   "idx": 2,
+   "addr": 989200,
+   "raw": 582165175,
+   "float": null,
+   "name": "cell4 / cell5 ADC @2200mV",
+   "unit": "u16;u16 cnt"
+  },
+  {
+   "idx": 3,
+   "addr": 989206,
+   "raw": 11739,
+   "float": null,
+   "name": "cell6 ADC @2200mV (FFB36-FFB28)",
+   "unit": "u16 cnt"
+  },
+  {
+   "idx": 4,
+   "addr": 989212,
+   "raw": 0,
+   "float": null,
+   "name": "spare (in cal checksum range)",
+   "unit": "u32"
+  },
+  {
+   "idx": 5,
+   "addr": 989218,
+   "raw": 1111949312,
+   "float": 49.75,
+   "name": "spare; cell1 ADC @4200mV (hi)",
+   "unit": "u16;u16 cnt"
+  },
+  {
+   "idx": 6,
+   "addr": 989224,
+   "raw": 1111441991,
+   "float": 47.81472396850586,
+   "name": "cell2 / cell3 ADC @4200mV",
+   "unit": "u16;u16 cnt"
+  },
+  {
+   "idx": 7,
+   "addr": 989230,
+   "raw": 1111114298,
+   "float": 46.564674377441406,
+   "name": "cell4 / cell5 ADC @4200mV",
+   "unit": "u16;u16 cnt"
+  },
+  {
+   "idx": 8,
+   "addr": 989236,
+   "raw": 22438,
+   "float": null,
+   "name": "cell6 ADC @4200mV",
+   "unit": "u16 cnt"
+  },
+  {
+   "idx": 9,
+   "addr": 989242,
+   "raw": 0,
+   "float": null,
+   "name": "spare (in cal checksum range)",
+   "unit": "u32"
+  },
+  {
+   "idx": 10,
+   "addr": 989248,
+   "raw": 724238336,
+   "float": null,
+   "name": "spare; P+ voltage ADC @13200mV (hi)",
+   "unit": "u16;u16 cnt"
+  },
+  {
+   "idx": 11,
+   "addr": 989254,
+   "raw": 2148029255,
+   "float": null,
+   "name": "P+ voltage ADC @25200mV; current ADC zero offset (hi)",
+   "unit": "u16 cnt;u16 cnt"
+  },
+  {
+   "idx": 12,
+   "addr": 989260,
+   "raw": 34212,
+   "float": null,
+   "name": "current ADC at cal current; spare",
+   "unit": "u16 cnt;u16"
+  },
+  {
+   "idx": 13,
+   "addr": 989266,
+   "raw": 196149248,
+   "float": null,
+   "name": "spare; cal reference temperature (hi)",
+   "unit": "u16;0.1K"
+  },
+  {
+   "idx": 14,
+   "addr": 989272,
+   "raw": 1378294768,
+   "float": null,
+   "name": "thermistor ADC at cal temp; cell/lot date (hi, SBS 0x94)",
+   "unit": "u16 cnt;SBS date"
+  },
+  {
+   "idx": 15,
+   "addr": 989278,
+   "raw": 15143,
+   "float": null,
+   "name": "SBS 0x95 value (lot no.?); spare",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 16,
+   "addr": 989284,
+   "raw": 1379486800,
+   "float": null,
+   "name": "const 'PL' (lo); ManufactureDate SBS 0x1B (hi)",
+   "unit": "u16;SBS date"
+  },
+  {
+   "idx": 17,
+   "addr": 989290,
+   "raw": 415,
+   "float": null,
+   "name": "SerialNumber SBS 0x1C",
+   "unit": "u16"
+  },
+  {
+   "idx": 18,
+   "addr": 989296,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 19,
+   "addr": 989302,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 20,
+   "addr": 989308,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 21,
+   "addr": 989314,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 22,
+   "addr": 989320,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 23,
+   "addr": 990736,
+   "raw": 0,
+   "float": null,
+   "name": "PF fault-mask bits 48-63 (lo); protection-disable mask FFB50 / SBS 0xB2 (hi)",
+   "unit": "bitmask;bitmask"
+  },
+  {
+   "idx": 24,
+   "addr": 989332,
+   "raw": 1161215988,
+   "float": 2923.9970703125,
+   "name": "Qmax / learned max capacity (SBS 0xA3)",
+   "unit": "float mAh"
+  },
+  {
+   "idx": 25,
+   "addr": 989338,
+   "raw": 1159032007,
+   "float": 2390.798583984375,
+   "name": "FullChargeCapacity",
+   "unit": "float mAh"
+  },
+  {
+   "idx": 26,
+   "addr": 989344,
+   "raw": 1120229763,
+   "float": 98.6748275756836,
+   "name": "gauge %: SOC at charge-term OCV?",
+   "unit": "float %"
+  },
+  {
+   "idx": 27,
+   "addr": 989350,
+   "raw": 1053574234,
+   "float": 0.3989589810371399,
+   "name": "gauge R table A[0] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 28,
+   "addr": 989356,
+   "raw": 1049260484,
+   "float": 0.27039921283721924,
+   "name": "gauge R table A[1] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 29,
+   "addr": 989362,
+   "raw": 1041317469,
+   "float": 0.14183945953845978,
+   "name": "gauge R table A[2] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 30,
+   "addr": 989368,
+   "raw": 1026757156,
+   "float": 0.04371847212314606,
+   "name": "gauge R table A[3] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 31,
+   "addr": 989374,
+   "raw": 1021438266,
+   "float": 0.027577031403779984,
+   "name": "gauge R table A[4] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 32,
+   "addr": 989380,
+   "raw": 1020669486,
+   "float": 0.02614506706595421,
+   "name": "gauge R table A[5] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 33,
+   "addr": 989386,
+   "raw": 1020989189,
+   "float": 0.026740560308098793,
+   "name": "gauge R table A[6] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 34,
+   "addr": 989392,
+   "raw": 1020322425,
+   "float": 0.025498615577816963,
+   "name": "gauge R table A[7] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 35,
+   "addr": 989398,
+   "raw": 1019168745,
+   "float": 0.023349719122052193,
+   "name": "gauge R table A[8] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 36,
+   "addr": 989404,
+   "raw": 1018534135,
+   "float": 0.022167665883898735,
+   "name": "gauge R table A[9] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 37,
+   "addr": 989410,
+   "raw": 1019736299,
+   "float": 0.02440687082707882,
+   "name": "gauge R table A[10] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 38,
+   "addr": 989416,
+   "raw": 1018978498,
+   "float": 0.02299535647034645,
+   "name": "gauge R table A[11] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 39,
+   "addr": 989422,
+   "raw": 1019336694,
+   "float": 0.023662548512220383,
+   "name": "gauge R table A[12] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 40,
+   "addr": 989428,
+   "raw": 1018780318,
+   "float": 0.02262621745467186,
+   "name": "gauge R table A[13] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 41,
+   "addr": 989434,
+   "raw": 1016332818,
+   "float": 0.018067393451929092,
+   "name": "gauge R table A[14] (SBS 0xAA)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 42,
+   "addr": 989440,
+   "raw": 1027539228,
+   "float": 0.04663191735744476,
+   "name": "gauge R table B[0] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 43,
+   "addr": 989446,
+   "raw": 1023768954,
+   "float": 0.03258655220270157,
+   "name": "gauge R table B[1] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 44,
+   "addr": 989452,
+   "raw": 1026720728,
+   "float": 0.043582767248153687,
+   "name": "gauge R table B[2] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 45,
+   "addr": 989458,
+   "raw": 1032514038,
+   "float": 0.06782905757427216,
+   "name": "gauge R table B[3] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 46,
+   "addr": 989464,
+   "raw": 1026102985,
+   "float": 0.04128149524331093,
+   "name": "gauge R table B[4] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 47,
+   "addr": 989470,
+   "raw": 1032390292,
+   "float": 0.06690707802772522,
+   "name": "gauge R table B[5] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 48,
+   "addr": 989476,
+   "raw": 1039162616,
+   "float": 0.11736482381820679,
+   "name": "gauge R table B[6] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 49,
+   "addr": 989482,
+   "raw": 1043825691,
+   "float": 0.17921487987041473,
+   "name": "gauge R table B[7] (SBS 0xAB)",
+   "unit": "float ohm?"
+  },
+  {
+   "idx": 50,
+   "addr": 989488,
+   "raw": 1393344239,
+   "float": null,
+   "name": "gauge-valid marker 0xBEEF (lo); model string len (b2), 'S' (b3)",
+   "unit": "u16;u8;char"
+  },
+  {
+   "idx": 51,
+   "addr": 989494,
+   "raw": 1449083717,
+   "float": null,
+   "name": "model string 'EC_V'",
+   "unit": "ascii"
+  },
+  {
+   "idx": 52,
+   "addr": 989500,
+   "raw": 808466771,
+   "float": null,
+   "name": "model string 'S900'",
+   "unit": "ascii"
+  },
+  {
+   "idx": 53,
+   "addr": 989506,
+   "raw": 5000752,
+   "float": null,
+   "name": "model string '0NL\\0'",
+   "unit": "ascii"
+  },
+  {
+   "idx": 54,
+   "addr": 989512,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 55,
+   "addr": 989518,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 56,
+   "addr": 989524,
+   "raw": 25362432,
+   "float": null,
+   "name": "spare; CycleCount SBS 0x17 (hi)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 57,
+   "addr": 990754,
+   "raw": 53,
+   "float": null,
+   "name": "cycle accumulator % toward next cycle",
+   "unit": "u16 %"
+  },
+  {
+   "idx": 58,
+   "addr": 989536,
+   "raw": 10609,
+   "float": null,
+   "name": "discharge time, low power bin 10-130",
+   "unit": "u32 ticks(s?)"
+  },
+  {
+   "idx": 59,
+   "addr": 989542,
+   "raw": 133535,
+   "float": null,
+   "name": "discharge time, mid power bin 130-370",
+   "unit": "u32 ticks(s?)"
+  },
+  {
+   "idx": 60,
+   "addr": 989548,
+   "raw": 61039,
+   "float": null,
+   "name": "discharge time, high power bin >370",
+   "unit": "u32 ticks(s?)"
+  },
+  {
+   "idx": 61,
+   "addr": 989554,
+   "raw": 43620,
+   "float": null,
+   "name": "throughput counter (FFE30/144000, flag FFB71)",
+   "unit": "u32"
+  },
+  {
+   "idx": 62,
+   "addr": 989560,
+   "raw": 0,
+   "float": null,
+   "name": "spare",
+   "unit": "u32"
+  },
+  {
+   "idx": 63,
+   "addr": 989566,
+   "raw": 2334677,
+   "float": null,
+   "name": "lifetime block signature 0x00239FD5",
+   "unit": "u32"
+  },
+  {
+   "idx": 64,
+   "addr": 989572,
+   "raw": 2490368,
+   "float": null,
+   "name": "fault count code 0A/0B/14/15",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 65,
+   "addr": 989578,
+   "raw": 1,
+   "float": null,
+   "name": "fault count code 16/1E/28/29",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 66,
+   "addr": 989584,
+   "raw": 973078528,
+   "float": 0.00048828125,
+   "name": "fault count code 32/33/34/3C",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 67,
+   "addr": 989590,
+   "raw": 67108864,
+   "float": null,
+   "name": "fault count code 3D/3E/3F/46",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 68,
+   "addr": 989596,
+   "raw": 0,
+   "float": null,
+   "name": "fault count code 47/50/51/5A",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 69,
+   "addr": 989602,
+   "raw": 31232,
+   "float": null,
+   "name": "fault count code 5B/5C/5D/5E",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 70,
+   "addr": 989608,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E2 tail)",
+   "unit": "u32"
+  },
+  {
+   "idx": 71,
+   "addr": 989614,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 72,
+   "addr": 989620,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 73,
+   "addr": 989626,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 74,
+   "addr": 989632,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 75,
+   "addr": 989638,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 76,
+   "addr": 989644,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 77,
+   "addr": 989650,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 78,
+   "addr": 989656,
+   "raw": 0,
+   "float": null,
+   "name": "spare (E3)",
+   "unit": "u32"
+  },
+  {
+   "idx": 79,
+   "addr": 989662,
+   "raw": 33161722,
+   "float": null,
+   "name": "boot count; sleep-entry count",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 80,
+   "addr": 989668,
+   "raw": 408093059,
+   "float": null,
+   "name": "cycle events; event n=3 count",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 81,
+   "addr": 989674,
+   "raw": 50724902,
+   "float": null,
+   "name": "event n=4 count; max-cell idx+1 (b2); min-cell idx+1 (b3)",
+   "unit": "u16;u8;u8"
+  },
+  {
+   "idx": 82,
+   "addr": 989680,
+   "raw": 4395,
+   "float": null,
+   "name": "lifetime max cell V; min cell V",
+   "unit": "mV;mV"
+  },
+  {
+   "idx": 83,
+   "addr": 989686,
+   "raw": 9070010,
+   "float": null,
+   "name": "lifetime max P+ voltage; max charge current",
+   "unit": "mV;mA"
+  },
+  {
+   "idx": 84,
+   "addr": 989692,
+   "raw": 232649601,
+   "float": null,
+   "name": "lifetime max discharge current; max temp",
+   "unit": "s16 mA;0.1K"
+  },
+  {
+   "idx": 85,
+   "addr": 989698,
+   "raw": 2750,
+   "float": null,
+   "name": "lifetime min temp; spare",
+   "unit": "0.1K;u16"
+  },
+  {
+   "idx": 86,
+   "addr": 989704,
+   "raw": 2102464074,
+   "float": null,
+   "name": "lifetime max cell delta; ts of max cell V",
+   "unit": "mV;P5B hours"
+  },
+  {
+   "idx": 87,
+   "addr": 989710,
+   "raw": 900829012,
+   "float": 1.3229241631051991e-06,
+   "name": "ts min cell V; ts max P+ V",
+   "unit": "P5B hours;P5B hours"
+  },
+  {
+   "idx": 88,
+   "addr": 989716,
+   "raw": 1445594049,
+   "float": null,
+   "name": "ts max chg current; ts max dsg current",
+   "unit": "P5B hours;P5B hours"
+  },
+  {
+   "idx": 89,
+   "addr": 989722,
+   "raw": 103252781,
+   "float": null,
+   "name": "ts max temp; ts min temp",
+   "unit": "P5B hours;P5B hours"
+  },
+  {
+   "idx": 90,
+   "addr": 989728,
+   "raw": 2404646912,
+   "float": null,
+   "name": "spare; ts max cell delta",
+   "unit": "u16;P5B hours"
+  },
+  {
+   "idx": 91,
+   "addr": 989734,
+   "raw": 3576077,
+   "float": null,
+   "name": "powered hours (log timestamp); discharging hours",
+   "unit": "h;h"
+  },
+  {
+   "idx": 92,
+   "addr": 989740,
+   "raw": 33032454,
+   "float": null,
+   "name": "charge/idle-state hours; discharge throughput",
+   "unit": "h;x900000 units"
+  },
+  {
+   "idx": 93,
+   "addr": 989746,
+   "raw": 991,
+   "float": null,
+   "name": "total throughput; hist[0] (V0,T0)",
+   "unit": "x900000 units;h"
+  },
+  {
+   "idx": 94,
+   "addr": 989752,
+   "raw": 197041,
+   "float": null,
+   "name": "V x T histogram hours [1],[2]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 95,
+   "addr": 989758,
+   "raw": 0,
+   "float": null,
+   "name": "V x T histogram hours [3],[4]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 96,
+   "addr": 989764,
+   "raw": 65536,
+   "float": null,
+   "name": "V x T histogram hours [5],[6]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 97,
+   "addr": 989770,
+   "raw": 262146,
+   "float": null,
+   "name": "V x T histogram hours [7],[8]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 98,
+   "addr": 989776,
+   "raw": 1,
+   "float": null,
+   "name": "V x T histogram hours [9],[10]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 99,
+   "addr": 989782,
+   "raw": 2949142,
+   "float": null,
+   "name": "V x T histogram hours [11],[12]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 100,
+   "addr": 989788,
+   "raw": 262182,
+   "float": null,
+   "name": "V x T histogram hours [13],[14]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 101,
+   "addr": 989794,
+   "raw": 6094848,
+   "float": null,
+   "name": "V x T histogram hours [15],[16]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 102,
+   "addr": 989800,
+   "raw": 1835151,
+   "float": null,
+   "name": "V x T histogram hours [17],[18]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 103,
+   "addr": 989806,
+   "raw": 35127296,
+   "float": null,
+   "name": "V x T histogram hours [19],[20]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 104,
+   "addr": 989812,
+   "raw": 310540591,
+   "float": null,
+   "name": "V x T histogram hours [21],[22]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 105,
+   "addr": 989818,
+   "raw": 11,
+   "float": null,
+   "name": "V x T histogram hours [23],[24]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 106,
+   "addr": 989824,
+   "raw": 28675548,
+   "float": null,
+   "name": "hours max cell >= 4000mV; hours min cell <= 3000mV",
+   "unit": "h;h"
+  },
+  {
+   "idx": 107,
+   "addr": 989830,
+   "raw": 0,
+   "float": null,
+   "name": "aux hour counters [0],[1] (no incrementer found)",
+   "unit": "h;h"
+  },
+  {
+   "idx": 108,
+   "addr": 989836,
+   "raw": 0,
+   "float": null,
+   "name": "aux hour counters [2],[3]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 109,
+   "addr": 989842,
+   "raw": 0,
+   "float": null,
+   "name": "aux hour counters [4],[5]",
+   "unit": "h;h"
+  },
+  {
+   "idx": 110,
+   "addr": 989848,
+   "raw": 0,
+   "float": null,
+   "name": "spare (EA)",
+   "unit": "u32"
+  },
+  {
+   "idx": 111,
+   "addr": 989854,
+   "raw": 0,
+   "float": null,
+   "name": "spare (EA)",
+   "unit": "u32"
+  },
+  {
+   "idx": 112,
+   "addr": 989860,
+   "raw": 0,
+   "float": null,
+   "name": "spare (EA)",
+   "unit": "u32"
+  },
+  {
+   "idx": 113,
+   "addr": 989866,
+   "raw": 0,
+   "float": null,
+   "name": "spare (EA)",
+   "unit": "u32"
+  },
+  {
+   "idx": 114,
+   "addr": 989872,
+   "raw": 0,
+   "float": null,
+   "name": "spare (EA)",
+   "unit": "u32"
+  },
+  {
+   "idx": 115,
+   "addr": 989878,
+   "raw": 211722,
+   "float": null,
+   "name": "sub-hour ticks: powered/discharging/charge-state (b0-b2)",
+   "unit": "3x u8"
+  },
+  {
+   "idx": 116,
+   "addr": 989884,
+   "raw": 288819712,
+   "float": null,
+   "name": "histogram sub-counters bytes 0-3",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 117,
+   "addr": 989890,
+   "raw": 264,
+   "float": null,
+   "name": "histogram sub-counters bytes 4-7",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 118,
+   "addr": 989896,
+   "raw": 419498278,
+   "float": null,
+   "name": "histogram sub-counters bytes 8-11",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 119,
+   "addr": 989902,
+   "raw": 237054485,
+   "float": null,
+   "name": "histogram sub-counters bytes 12-15",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 120,
+   "addr": 989908,
+   "raw": 84224542,
+   "float": null,
+   "name": "histogram sub-counters bytes 16-19",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 121,
+   "addr": 989914,
+   "raw": 722801204,
+   "float": null,
+   "name": "histogram sub-counters bytes 20-23",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 122,
+   "addr": 989920,
+   "raw": 3220480,
+   "float": null,
+   "name": "hist sub-counter 24 (b0); >=4000mV sub (b1); <=3000mV sub (b2)",
+   "unit": "u8;u8;u8"
+  },
+  {
+   "idx": 123,
+   "addr": 989926,
+   "raw": 0,
+   "float": null,
+   "name": "aux sub-counters 0-3",
+   "unit": "4x u8"
+  },
+  {
+   "idx": 124,
+   "addr": 989932,
+   "raw": 0,
+   "float": null,
+   "name": "aux sub-counters 4-5; spare",
+   "unit": "u8;u8;u16"
+  },
+  {
+   "idx": 125,
+   "addr": 989938,
+   "raw": 0,
+   "float": null,
+   "name": "spare (EE)",
+   "unit": "u32"
+  },
+  {
+   "idx": 126,
+   "addr": 989944,
+   "raw": 0,
+   "float": null,
+   "name": "spare (EE)",
+   "unit": "u32"
+  },
+  {
+   "idx": 127,
+   "addr": 989950,
+   "raw": 2050,
+   "float": null,
+   "name": "snapshot ring idx (b0); fault-log ring idx (b1); snapshot1 w0 (hi)",
+   "unit": "u8;u8;u16"
+  },
+  {
+   "idx": 128,
+   "addr": 989956,
+   "raw": 3300,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 129,
+   "addr": 989962,
+   "raw": 370577236,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 130,
+   "addr": 989968,
+   "raw": 229376798,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 131,
+   "addr": 989974,
+   "raw": 2133,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 132,
+   "addr": 989980,
+   "raw": 229115993,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 133,
+   "addr": 989986,
+   "raw": 2577,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 134,
+   "addr": 989992,
+   "raw": 3311,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 135,
+   "addr": 989998,
+   "raw": 3390476116,
+   "float": -2466773.0,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 136,
+   "addr": 990004,
+   "raw": 233727316,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 137,
+   "addr": 990010,
+   "raw": 1173,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 138,
+   "addr": 990016,
+   "raw": 233440410,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 139,
+   "addr": 990022,
+   "raw": 2682,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 140,
+   "addr": 990028,
+   "raw": 3297,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 141,
+   "addr": 990034,
+   "raw": 337022804,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 142,
+   "addr": 990040,
+   "raw": 204997432,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 143,
+   "addr": 990046,
+   "raw": 2,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 144,
+   "addr": 990052,
+   "raw": 212598784,
+   "float": null,
+   "name": "fault snapshot data (F0-F2, 3x24 B)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 145,
+   "addr": 990058,
+   "raw": 2386955198,
+   "float": null,
+   "name": "snapshot3 last word; fault log entry0 ts (hi)",
+   "unit": "u16;u16"
+  },
+  {
+   "idx": 146,
+   "addr": 990064,
+   "raw": 2386975747,
+   "float": null,
+   "name": "fault log (F3, 8x [ts u16][state][code])",
+   "unit": "bytes"
+  },
+  {
+   "idx": 147,
+   "addr": 990070,
+   "raw": 2386975749,
+   "float": null,
+   "name": "fault log (F3, 8x [ts u16][state][code])",
+   "unit": "bytes"
+  },
+  {
+   "idx": 148,
+   "addr": 990076,
+   "raw": 2393857030,
+   "float": null,
+   "name": "fault log (F3, 8x [ts u16][state][code])",
+   "unit": "bytes"
+  },
+  {
+   "idx": 149,
+   "addr": 990082,
+   "raw": 2398116864,
+   "float": null,
+   "name": "fault log (F3, 8x [ts u16][state][code])",
+   "unit": "bytes"
+  },
+  {
+   "idx": 150,
+   "addr": 990088,
+   "raw": 2404670510,
+   "float": null,
+   "name": "fault log (F3, 8x [ts u16][state][code])",
+   "unit": "bytes"
+  },
+  {
+   "idx": 151,
+   "addr": 990094,
+   "raw": 2404652054,
+   "float": null,
+   "name": "fault log (F3, 8x [ts u16][state][code])",
+   "unit": "bytes"
+  },
+  {
+   "idx": 152,
+   "addr": 990100,
+   "raw": 2404652566,
+   "float": null,
+   "name": "fault log (F3, 8x [ts u16][state][code])",
+   "unit": "bytes"
+  },
+  {
+   "idx": 153,
+   "addr": 990106,
+   "raw": 117270,
+   "float": null,
+   "name": "fault log entry7 state/code (lo); event-log ring idx (b2)",
+   "unit": "u8;u8;u8"
+  },
+  {
+   "idx": 154,
+   "addr": 990112,
+   "raw": 169250644,
+   "float": null,
+   "name": "event log entry 0 [ts][state][code]",
+   "unit": "u16;u8;u8"
+  },
+  {
+   "idx": 155,
+   "addr": 990118,
+   "raw": 169250644,
+   "float": null,
+   "name": "event log entry 1",
+   "unit": "u16;u8;u8"
+  },
+  {
+   "idx": 156,
+   "addr": 990124,
+   "raw": 169250644,
+   "float": null,
+   "name": "event log entry 2",
+   "unit": "u16;u8;u8"
+  },
+  {
+   "idx": 157,
+   "addr": 990130,
+   "raw": 169250644,
+   "float": null,
+   "name": "event log entry 3",
+   "unit": "u16;u8;u8"
+  }
+ ],
+ "active_block": 989184,
+ "image_hex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00ff2fa5b82201feb522b62202fdb722b32203fcdb2d000004fb0000000005fa0000474206f947423f4207f83a423a4208f7a657000009f6000000000af500002b2b0bf4475308800cf3a48500000df20000b10b0ef1f01b27520ff0273b000010ef504c395211ee9f01000012ed0000000013ec0000000014eb0000000015ea0000000016e90000000017e80400000018e7f4bf364519e6c76c15451ae58359c5421be45a44cc3e1ce3c4718a3e1de25d3e113e1ee12412333d1fe03ae9e13c20df2e2ed63c21de050fdb3c22dd79e2d03c23dce947bf3c24dbf798b53c25daebf0c73c26d9c260bc3c27d8f6d7c13c28d79e5ab93c29d61202943c2ad51c013f3d2bd47a79053d2cd3d883323d2dd2f6e98a3d2ed1c916293d2fd09406893d30cff85cf03d31ce1b84373e32cdefbe0c5333cc45435f5634cb5339303035ca304e4c0036c90000000037c80000000038c70000830139c62c0000003ac5712900003bc49f0902003cc36fee00003dc264aa00003ec1000000003fc0d59f230040bf0000260041be0100000042bd0000003a43bc0000000444bb0000000045ba007a000046b90000000047b80000000048b70000000049b6000000004ab5000000004bb4000000004cb3000000004db2000000004eb1000000004fb0fa01fa0150af8301531851ae2600060352ad2b11000053acba658a0054ab81f3dd0d55aabe0a000056a94a0e517d57a8548fb13558a7c1032a5659a62d8327065aa50000548f5ba40d9136005ca30609f8015da2df0300005ea1b10103005fa000000000609f00000100619e02000400629d01000000639c16002d00649b26000400659a00005d0066998f001c0067980000180268972f79821269960b0000006a95dc8db5016b94000000006c93000000006d92000000006e91000000006f9000000000708f00000000718e00000000728d00000000738c0a3b0300748b000a3711758a080100007689260901197788152a210e78871e2a050579863412152b7a85002431007b84000000007c83000000007d82000000007e81000000007f8002080000807fe40c0000817e548f1616827d1e03ac0d837c55080000847b5908a80d857a110a00008679ef0c00008778548f16ca88775465ee0d8976950400008a759a04ea0d8b747a0a00008c73e10c00008d72548f16148e713803380c8f7002000000906f0000ac0c916ebe0b468e926d035c468e936c055c468e946b065caf8e956a005cf08e96692e5c548f97681614548f98671616548f996616ca01009a65548f160a9b64548f160a9c63548f160a9d62548f160a17e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80400000017e80000000039c62d00000039c62e00000039c62f00000039c63000000039c63100000039c63200000017e80000000039c63300000039c63400000039c635000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd48e5aa55a"
+}

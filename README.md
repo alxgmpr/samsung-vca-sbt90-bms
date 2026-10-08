@@ -32,6 +32,17 @@ the BMS over SMBus, dump its flash, and clear the PF so the board can be reused 
    powered hours before the bench work. Appending the record
    `17 E8 00 00 00 00` to the active block cleared it (`pico/pf_append.py`). Undo = append `17 E8 04 00 00 00`.
 
+Firmware RE (static, from `firmware/code.dis`):
+
+| Doc | Contents |
+|---|---|
+| [docs/re/thresholds.md](docs/re/thresholds.md) | Every protection limit/timer, constant address, fault code (all fixed in code flash 0xD550-0xD5E4) |
+| [docs/re/fault-codes.md](docs/re/fault-codes.md) | Code -> fault bit -> condition table for the @0x2422 table |
+| [docs/re/param-names.md](docs/re/param-names.md) | Names/units for all 158 params (P00-P9D), SBS mappings |
+| [docs/re/balancing.md](docs/re/balancing.md) | Evidence that the firmware does no cell balancing |
+| [docs/re/unlock.md](docs/re/unlock.md) | SBS 0x7A = 0x835A unlock, gated vendor commands, no-bootloader param-write proposal |
+| [docs/re/_board_log.md](docs/re/_board_log.md) | Log of every board action taken during the RE |
+
 Full details: [docs/SESSION_NOTES.md](docs/SESSION_NOTES.md) (hardware map, wiring, dead ends) and
 [docs/WRITE_PLAN.md](docs/WRITE_PLAN.md) (bootloader protocol decode, write proof, PF identification).
 
@@ -58,7 +69,9 @@ uv run bms.py status                 # decoded SBS: pack/cell volts, capacity, s
 uv run bms.py params [--json]        # every data-flash param (newest record per index), via the bootloader
 uv run bms.py backup [FILE]          # save the 4 KB data-flash image (default backups/df_<time>.bin)
 uv run bms.py set-param IDX VALUE    # append one record (asks first, saves a pre-write image, verifies the diff)
-uv run bms.py log                    # decoded fault/event log with cell snapshots
+uv run bms.py log [--json]           # decoded fault/event log with cell snapshots
+uv run bms.py status --json          # same readout as JSON
+uv run bms.py report                 # status + log + named params + raw image -> reports/<time>.json + .md
 ```
 
 Lower-level scripts run directly: `mpremote connect /dev/cu.usbmodem1101 cp pico/dfw.py pico/smb.py : + run pico/pf_verify.py`.
@@ -69,6 +82,13 @@ Work on a bench supply through a resistor ladder (6 × 100 Ω, 22.2 V, 100 mA li
 fitted, and keep a backup of the data flash before any write. This is a 6S lithium pack; the PF exists
 for a reason. Here it was a dead original cell. **When fitting cells:** the dead-cell check re-arms on
 every wake, so connect all cells/taps before the board can power up, and confirm `bms.py status` shows
-PF clear before fitting the new F1 (a re-trip would blow it). Check balance on the first charges.
+PF clear before fitting the new F1 (a re-trip would blow it).
+
+The firmware does **not balance cells** ([balancing.md](docs/re/balancing.md)), and it latches a PF on imbalance
+(code 0xCC: spread > 195 mV while charging above 3.7 V, or > 170/200 mV at rest, for 20 s) and on any cell
+> 4300 mV for 5 s (0xC8). Match the six cells to within ~20 mV at the same state of charge, don't fit cells above
+4.2 V, and check the spread with `bms.py status` after each of the first charges. P17's high word is a
+protection-disable mask restored at every boot; it must read 0 (`bms.py params`). The config header at 0xD410
+names `21700_30T`, so the original cells were probably 21700, not 18650: check the holder before buying cells.
 
 Firmware images are Samsung SDI's; keep this repo private.

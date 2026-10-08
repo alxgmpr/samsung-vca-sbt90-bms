@@ -6,3 +6,5 @@ ghidra.rep/
 # AI process artifacts (plans/todos) stay local
 CLAUDE.md
 BINARY_NINJA_TODO.md
+# shared board lock (agents)
+.board.lock/
