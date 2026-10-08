@@ -116,6 +116,15 @@ fault (param P0x17 = 4, fault bit 50) cleared by appending an EEL record P0x17 =
 BatteryStatus 0x48C0 -> 0x00C0, Q10 gate 0 V. Full detail at the end of WRITE_PLAN.md.
 Next: hardware rebuild (new F1, 6 cells).
 
+Update 2026-10-08:
+- Firmware RE done statically (docs/re/*.md): thresholds, fault codes, all 158 params named, no balancing,
+  AFE map, gauge scaling (current unit 10 mA), event codes, log freeze.
+- SBS unlock (0x7A = 0x835A) + param write via 0x84/0x8A proven on board (docs/re/unlock-exec.md). Avoid 0x87.
+- Fuse drive DISARMED for assembly: P10 = 0x00004C50 (ManufactureDate 0). Restore 0x52394C50 only after PF
+  reads clear with the cells fitted.
+- Cells: 6x Samsung INR21700-30T. Follow README "Cell install procedure" (F1 first, then B-, B1..B5, B+).
+- Pre-assembly baseline: reports/20261007_235843.md.
+
 ## Rebuild reminder
 
 6× Samsung INR21700-30T (original cell per config header), matched & balanced before assembly,
