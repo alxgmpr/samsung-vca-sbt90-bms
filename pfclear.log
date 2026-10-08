@@ -1,0 +1,17 @@
+reset 374
+baseline                           00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+== 0x71/0x73 gate
+gate 0214 -> 0x73 read NAK
+gate 0215 -> 0x73 read NAK
+gate 0216 -> 0x73 read NAK
+gate 0217 -> 0x73 read NAK
+PF clear                           00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+unseal + PF clear                  00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+full access + PF clear             00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+unseal + full + PF clear           00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+PF clear reversed                  00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+PF clear +PEC                      00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+unseal + PF clear +PEC             00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+full access + PF clear +PEC        00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+unseal + full + PF clear +PEC      00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000
+PF clear reversed +PEC             00=a000 [DSG off CHG off | fail=over voltage | state=0] 16=48c0 14=0 15=0 03=6000

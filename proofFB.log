@@ -1,0 +1,8 @@
+CHECK {'fcc': 2390, 'ma': 40960, 'cyc': 387, 'cells': [3723, 3712, 3700, 3702, 3698, 3706], 'model': b'SEC_VS9000NL', 'stat': 18624}
+active F1800 spare F1000 TGT F1400
+status before (2, False)
+status after  (16, False)
+DIFF []
+CHECK {'fcc': 2390, 'ma': 40960, 'cyc': 387, 'cells': [3723, 3712, 3699, 3703, 3698, 3706], 'model': b'SEC_VS9000NL', 'stat': 18624}
+cp dfw.py :dfw.py
+Up to date: dfw.py

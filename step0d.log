@@ -1,0 +1,15 @@
+=== target F1400 ===
+ before: ffffffffffffffffffffffffffffffff
+ enter 0x55 -> 010852
+ 0xFD write OK
+ exit 0x59 -> 028000
+ after:  ffffffffffffffffffffffffffffffff
+ witnesses changed: none
+=== target F1E20 ===
+ before: ffffffffffffffffffffffffffffffff
+ enter 0x55 -> 010852
+ 0xFD write OK
+ exit 0x59 -> 028000
+ after:  ffffffffffffffffffffffffffffffff
+ witnesses changed: none
+reset to firmware

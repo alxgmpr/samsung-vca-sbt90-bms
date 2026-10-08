@@ -1,0 +1,5 @@
+CHECK {'fcc': 2390, 'ma': 40960, 'cyc': 387, 'cells': [3720, 3712, 3700, 3705, 3697, 3706], 'model': b'SEC_VS9000NL', 'stat': 18624}
+active F1800, slot F1DE6 (record #251), writing 17e800000000
+PFDL status 0
+DIFF ['F1DE6:FF>17', 'F1DE7:FF>E8', 'F1DE8:FF>00', 'F1DE9:FF>00', 'F1DEA:FF>00', 'F1DEB:FF>00']
+CHECK {'fcc': 2390, 'ma': 8320, 'cyc': 387, 'cells': [3724, 3712, 3700, 3703, 3697, 3705], 'model': b'SEC_VS9000NL', 'stat': 192}

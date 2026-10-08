@@ -1,0 +1,12 @@
+64 F1840 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+64 F1880 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+64 F1900 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+32 F1840 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+32 F1880 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+32 F1900 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+16 F1840 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+16 F1880 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+16 F1900 ['ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff', 'ffffffffffffffffffffffff']
+seq64: ['ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff', 'ffffffff']
+cp dfw.py :dfw.py
+Up to date: dfw.py

@@ -1,0 +1,2 @@
+TOOL0 low. Turn the supply on now (C+ clipped) - 120 s
+hold  30 ms  TOOL0 low=True  echo=3a  baud reply=(b'', None)

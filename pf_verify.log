@@ -1,0 +1,11 @@
+CHECK {'fcc': 2390, 'ma': 8320, 'cyc': 387, 'cells': [3722, 3712, 3701, 3704, 3698, 3705], 'model': b'SEC_VS9000NL', 'stat': 192}
+reset 0 ms 374 stat 00C0 ma 2080 chgI 150 chgV 25600
+reset 1 ms 376 stat 00C0 ma 2080 chgI 150 chgV 25600
+reset 2 ms 374 stat 00C0 ma 2080 chgI 150 chgV 25600
+t+10s stat 00C0 ma 2080 chgI 150 chgV 25600 volt 22241
+t+20s stat 00C0 ma 2080 chgI 150 chgV 25600 volt 22241
+t+30s stat 00C0 ma 2080 chgI 150 chgV 25600 volt 22241
+t+40s stat 00C0 ma 2080 chgI 150 chgV 25600 volt 22240
+t+50s stat 00C0 ma 2080 chgI 150 chgV 25600 volt 22241
+t+60s stat 00C0 ma 2080 chgI 150 chgV 25600 volt 22241
+CHECK {'fcc': 2390, 'ma': 8320, 'cyc': 387, 'cells': [3722, 3712, 3700, 3704, 3698, 3706], 'model': b'SEC_VS9000NL', 'stat': 192}

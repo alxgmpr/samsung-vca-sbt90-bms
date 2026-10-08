@@ -1,0 +1,11 @@
+27 1:E5 2:E110 3:E5 4:E110 5:E5 6:E110 8:E5
+55 1:E110 2:E5 3:010852 4:010852ff 5:010852ffff 6:010852ffffff 8:010852ffffffffff
+59 1:02 2:0280 3:E110 4:E110 5:0280008cff 6:0280008cffff 8:0280008cffffffff
+70 1:01 2:E110 3:E5 4:0100eaff 5:0100eaffff 6:0100eaffffff 8:0100eaffffffffff
+7c 1:01 2:E110 3:E110 4:010002ff 5:010002ffff 6:010002ffffff 8:010002ffffffffff
+f0 1:01 2:E110 3:E5 4:0100dbff 5:0100dbffff 6:0100dbffffff 8:0100dbffffffffff
+fc 1:E5 2:E110 3:E5 4:E110 5:ffffffffff 6:ffffffffffff 8:ffffffffffffffff
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "bl.py", line 12, in rraw
+OSError: [Errno 5] EIO

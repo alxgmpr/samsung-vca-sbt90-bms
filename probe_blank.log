@@ -1,0 +1,9 @@
+CHECK {'fcc': 2390, 'ma': 40960, 'cyc': 387, 'cells': [3722, 3712, 3699, 3704, 3698, 3705], 'model': b'SEC_VS9000NL', 'stat': 18624}
+status0 1
+blank F1000 len16 -> (1, 1)
+blank F1400 len16 -> (1, 1)
+blank F1800 len16 -> (1, 1)
+blank F1C00 len16 -> (1, 1)
+blank F1CC0 len16 -> (1, 1)
+CHECK {'fcc': 2390, 'ma': 40960, 'cyc': 387, 'cells': [3721, 3712, 3700, 3704, 3698, 3705], 'model': b'SEC_VS9000NL', 'stat': 18624}
+cp dfw.py :dfw.py

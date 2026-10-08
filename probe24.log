@@ -1,0 +1,7 @@
+0xFC reference @F1880: ffffffffffffffffffffffffffffffff
+A 0x24 setup no-stop + read16          OSError 110
+B readfrom_mem(0x24,18)                ffffffffffffffffffffffffffffffffffff
+C 0x24 setup +stop, then read16        ffffffffffffffffffffffffffffffff
+D 0x24 setup, then readfrom_mem(0x59,18) 0280008cffffffffffffffffffffffffffff
+E after 0x55: setup no-stop + read16   OSError 110
+reset to firmware

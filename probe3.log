@@ -1,0 +1,32 @@
+reset 370
+baseline 00: a000 a000 a000 a000 | readable cmds: 114
+== single writes, immediate 0x00 reads (no gap / 20 ms gap)
+c3be  fast[a000 a000 a000 a000]  slow[a000 a000 a000 a000]  raw8 00a0a4ffffffffff
+c428  fast[a000 a000 a000 a000]  slow[a000 a000 a000 a000]  raw8 00a0a4ffffffffff
+db4e  fast[a000 a000 a000 a000]  slow[a000 a000 a000 a000]  raw8 00a0a4ffffffffff
+c3bd  fast[a000 a000 a000 a000]  slow[a000 a000 a000 a000]  raw8 00a0a4ffffffffff
+c3bf  fast[a000 a000 a000 a000]  slow[a000 a000 a000 a000]  raw8 00a0a4ffffffffff
+1234  fast[a000 a000 a000 a000]  slow[a000 a000 a000 a000]  raw8 00a0a4ffffffffff
+== same, with PEC on the write
+c3be pec  [a000 a000 a000 a000]
+c428 pec  [a000 a000 a000 a000]
+db4e pec  [a000 a000 a000 a000]
+== pairs/triples, then unlock checks
+Traceback (most recent call last):
+  File "<stdin>", line 55, in <module>
+NotImplementedError: only slices with step=1 (aka None) are supported
+reset 385
+baseline 00: a000 a000 a000 a000 | readable cmds: 114
+== pairs/triples, then unlock checks
+c3be c3be | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+c3be c428 | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+c3be db4e | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+c428 c3be | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+c428 c428 | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+c428 db4e | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+db4e c3be | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+db4e c428 | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+db4e db4e | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+c3be c428 db4e | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+db4e c428 c3be | 00: a000 a000 a000 | EE w: False | mode w: False | new cmds: [] | lost: [] | 16=48c0
+final reset 385

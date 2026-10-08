@@ -1,0 +1,13 @@
+0xFC before: ffffffffffff | 0x70: 0100ea
+== addr fef00
+V1 raw write + read          ffffffffffffffffffffffffffffffff
+   0xFC after / 0x70         ffffffffffff / 0100ea
+V3 write(no stop) + read     dfd2cc41b1af40fdf59f56d6c7d1d0c9
+V2 block write + FC read     ffffffffffffffffffffffffffffffffffff
+   0x55/0x59/0x70 still: 010852 0280008c 0100ea
+== addr 00000
+V1 raw write + read          ffffffffffffffffffffffffffffffff
+   0xFC after / 0x70         ffffffffffff / 0100ea
+V3 write(no stop) + read     f3b6ffffffffffff1953ffffffff1d53
+V2 block write + FC read     E110
+   0x55/0x59/0x70 still: 010852 0280008c 0100ea

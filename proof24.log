@@ -1,0 +1,8 @@
+active block F1800, spare F1000, scratch TGT F1400
+TGT before: ffffffffffffffff
+0x55 mode entered
+count,noPEC  240600140f0100a5       -> ACK:ACK  TGT:ffffffffffffffff
+count,PEC    240700140f0100a5d3     -> ACK:ACK  TGT:ffffffffffffffff
+noCount      2400140f0100a5         -> ACK:ACK  TGT:ffffffffffffffff
+active-block witnesses changed: none (intact)
+reset to firmware

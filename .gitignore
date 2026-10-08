@@ -1,0 +1,9 @@
+.DS_Store
+__pycache__/
+# Ghidra project (local tool state)
+ghidra.gpr
+ghidra.rep/
+# AI process artifacts (plans/todos) stay local
+CLAUDE.md
+WRITE_PLAN.md
+BINARY_NINJA_TODO.md

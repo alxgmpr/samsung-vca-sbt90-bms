@@ -1,0 +1,8 @@
+target before: ffffffffffffffffffffffffffffffff
+pre snap: OK
+enter mode 0x55 -> E110
+0xFD write NAK (110): fd00140f0100a5
+0xFD write OK: fd0600140f0100a5
+exit 0x59 -> 028000
+target after:  ffffffffffffffffffffffffffffffff
+changed rows: 0

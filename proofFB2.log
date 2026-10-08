@@ -1,0 +1,8 @@
+CHECK {'fcc': 2390, 'ma': 40960, 'cyc': 387, 'cells': [3721, 3713, 3699, 3703, 3698, 3706], 'model': b'SEC_VS9000NL', 'stat': 18624}
+active F1000 spare F1800 TGT F1C00
+status before 0
+blank TGT (255, 0)
+status after wr 0
+blank TGT (0, 27)
+DIFF ['F1C00:FF>A5']
+CHECK {'fcc': 2390, 'ma': 40960, 'cyc': 387, 'cells': [3721, 3712, 3699, 3703, 3697, 3706], 'model': b'SEC_VS9000NL', 'stat': 18624}

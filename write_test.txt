@@ -1,0 +1,10 @@
+EE before 00000000000000000000000000000000
+A no-op block write: ACKed
+EE after A 00000000000000000000000000000000
+B modified write: ACKed
+EE after B 00000000000000000000000000000000
+status 48c0
+TI unseal          00=a000 03=6000 16=48c0 EE writable=False
+TI full access     00=a000 03=6000 16=48c0 EE writable=False
+TI unseal swapped  00=a000 03=6000 16=48c0 EE writable=False
+EE now 00000000000000000000000000000000
