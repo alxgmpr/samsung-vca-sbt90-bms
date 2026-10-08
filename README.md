@@ -79,6 +79,8 @@ uv run bms.py status --json          # same readout as JSON
 uv run bms.py report                 # status + log + named params + raw image -> reports/<time>.json + .md
 ```
 
+Offline tests (dump hashes, firmware anchors, data-flash history, decoders; no hardware): `uv run --with pytest pytest -q tests`.
+
 Lower-level scripts run directly: `mpremote connect /dev/cu.usbmodem1101 cp pico/dfw.py pico/smb.py : + run pico/pf_verify.py`.
 
 ## Safety
